@@ -99,7 +99,7 @@ namespace SimpleLeadership
             Widgets.Label(new Rect(rect.x, curY, rect.width, InfoRowHeight), "SL_CurrentEvents".Translate().ToString().ToUpper());
             curY += InfoRowHeight;
 
-            DrawEvents(new Rect(rect.x, curY, rect.width, EventButtonHeight), faction, settlement, leaderTracker);
+            DrawEvents(new Rect(rect.x, curY, rect.width, EventButtonHeight), faction, settlement, leaderTracker, isLeft);
         }
 
         private string GetLeaderLocationText(Pawn leader)
@@ -166,9 +166,9 @@ namespace SimpleLeadership
             curY += InfoRowHeight;
         }
 
-        private void DrawEvents(Rect rect, Faction faction, Settlement settlement, WorldComponent_LeaderTracker leaderTracker)
+        private void DrawEvents(Rect rect, Faction faction, Settlement settlement, WorldComponent_LeaderTracker leaderTracker, bool isFactionColumn)
         {
-            var events = settlement != null ? settlement.GetActiveEvents<PowerEventBase>() : faction.GetActiveEvents<PowerEventBase>();
+            var events = isFactionColumn ? faction.GetActiveEvents<PowerEventBase>() : settlement.GetActiveEvents<PowerEventBase>();
             
             if (events.Any())
             {

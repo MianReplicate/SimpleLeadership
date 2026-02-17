@@ -28,16 +28,19 @@ namespace SimpleLeadership
         public override void FinalizeInit(bool fromLoad)
         {
             base.FinalizeInit(fromLoad);
+            LongEventHandler.toExecuteWhenFinished.Add(delegate
+            {
+                if (!initialized)
+                {
+                    InitializeLeaders();
+                    initialized = true;
+                }
+            });
         }
 
         public override void WorldComponentTick()
         {
             base.WorldComponentTick();
-            if (!initialized)
-            {
-                InitializeLeaders();
-                initialized = true;
-            }
             if (randomSettlementEvents == null)
             {
                 randomSettlementEvents = DefDatabase<PowerEventDef>.AllDefs.Where(def => def.chancePerSeason > 0f && typeof(SettlementPowerEvent).IsAssignableFrom(def.workerClass)).ToList();
