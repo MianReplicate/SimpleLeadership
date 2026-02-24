@@ -184,7 +184,7 @@ namespace SimpleLeadership
             return null;
         }
 
-        public Settlement GetSettlementOfBaseLeader(Pawn pawn)
+        public IEnumerable<Settlement> GetSettlementsOfBaseLeader(Pawn pawn)
         {
             foreach (var factionEntry in leadershipData)
             {
@@ -192,11 +192,10 @@ namespace SimpleLeadership
                 {
                     if (settlementEntry.Value == pawn)
                     {
-                        return settlementEntry.Key;
+                        yield return settlementEntry.Key;
                     }
                 }
             }
-            return null;
         }
 
         public FactionLeadershipData GetLeadershipDataFor(Faction faction)
@@ -217,9 +216,25 @@ namespace SimpleLeadership
 
         public void StartPowerEvent(PowerEventDef def, params object[] args)
         {
+            if (def == PowerEventDefOf.SL_PowerStruggle)
+            {
+                Settlement targetSettlement = args.OfType<Settlement>().FirstOrDefault();
+                if (targetSettlement != null)
+                {
+                    for (int i = activeEvents.Count - 1; i >= 0; i--)
+                    {
+                        var existingEvent = activeEvents[i];
+                        if (existingEvent is SettlementPowerEvent && existingEvent.IsTarget(targetSettlement))
+                        {
+                            EndPowerEvent(existingEvent);
+                        }
+                    }
+                }
+            }
+
             var newEvent = (PowerEventBase)Activator.CreateInstance(def.workerClass);
-            newEvent.Initialize(def, args);
             if (activeEvents.Any(e => e.IsDuplicate(newEvent))) return;
+            newEvent.Initialize(def, args);
             newEvent.OnStart();
             activeEvents.Add(newEvent);
         }

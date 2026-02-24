@@ -18,5 +18,10 @@ namespace SimpleLeadership
             }
             base.OnResolve();
         }
+
+        public override bool ShouldGiveMessage()
+        {
+            return true;
+        }
     }
 }

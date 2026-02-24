@@ -67,14 +67,17 @@ namespace SimpleLeadership
                 string body = "SL_NewLeaderElectedLetterBody".Translate(newLeader.Named("PAWN"));
                 Find.LetterStack.ReceiveLetter(label, body, LetterDefOf.NeutralEvent, newLeader, faction);
 
-                Settlement oldSettlement = leaderTracker.GetSettlementOfBaseLeader(newLeader);
-                if (oldSettlement != null)
+                var oldSettlements = leaderTracker.GetSettlementsOfBaseLeader(newLeader).ToList();
+                if (oldSettlements.Any())
                 {
                     if (data != null)
                     {
-                        data.settlementLeaders.Remove(oldSettlement);
+                        foreach (var settlement in oldSettlements)
+                        {
+                            data.settlementLeaders.Remove(settlement);
+                            leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, settlement);
+                        }
                     }
-                    leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, oldSettlement);
                 }
             }
     

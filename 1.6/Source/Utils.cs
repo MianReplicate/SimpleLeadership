@@ -89,13 +89,16 @@ namespace SimpleLeadership
                 return;
 
             WorldComponent_LeaderTracker leaderTracker = WorldComponent_LeaderTracker.Instance;
-            Settlement leaderSettlement = leaderTracker.GetSettlementOfBaseLeader(pawn);
+            var leaderSettlements = leaderTracker.GetSettlementsOfBaseLeader(pawn).ToList();
 
-            if (leaderSettlement != null)
+            if (leaderSettlements.Any())
             {
                 if (pawn != pawn.Faction.leader)
                 {
-                    leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, leaderSettlement);
+                    foreach (var settlement in leaderSettlements)
+                    {
+                        leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, settlement);
+                    }
                 }
             }
         }
