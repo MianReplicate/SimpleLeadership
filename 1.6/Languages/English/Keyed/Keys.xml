@@ -5,8 +5,8 @@
   <SL_BaseLeadership>Base Leadership</SL_BaseLeadership>
   <SL_RaidOriginInfo>(This raid originated from Base {0})</SL_RaidOriginInfo>
   <SL_RaidOriginLeaderInfo>Base Leader {PAWN_nameDef} decided to join this raid, if you can capture or kill them - all future raids from this base will be weakened.</SL_RaidOriginLeaderInfo>
-  <SL_SiteOwnershipInfo>Base '{0}' has claimed ownership of this site.</SL_SiteOwnershipInfo>
-  <SL_JumpToBase>Jump to Base</SL_JumpToBase>
+  <SL_SiteOwnershipInfo>Base {0} has claimed ownership of this site.</SL_SiteOwnershipInfo>
+  <SL_JumpToBase>Jump to {0}</SL_JumpToBase>
   <SL_JumpToBaseDesc>Jump to the base that owns this site.</SL_JumpToBaseDesc>
   <SL_Location>Location:</SL_Location>
   <SL_NotAvailable>Not Available</SL_NotAvailable>

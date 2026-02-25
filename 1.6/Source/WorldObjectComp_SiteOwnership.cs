@@ -12,6 +12,7 @@ namespace SimpleLeadership
             compClass = typeof(WorldObjectComp_SiteOwnership);
         }
     }
+    [HotSwappable]
     public class WorldObjectComp_SiteOwnership : WorldObjectComp
     {
         public Settlement owningSettlement;
@@ -25,7 +26,9 @@ namespace SimpleLeadership
         {
             if (owningSettlement != null)
             {
-                return "SL_SiteOwnershipInfo".Translate(owningSettlement.Label);
+                var label = owningSettlement.Label;
+                var tagged = "SL_SiteOwnershipInfo".Translate(label.ApplyTag(TagType.Settlement, owningSettlement.Faction.GetUniqueLoadID()));
+                return tagged.Resolve();
             }
             return null;
         }
@@ -36,12 +39,12 @@ namespace SimpleLeadership
             {
                 yield return new Command_Action
                 {
-                    defaultLabel = "SL_JumpToBase".Translate(),
+                    defaultLabel = "SL_JumpToBase".Translate(owningSettlement.Label),
                     defaultDesc = "SL_JumpToBaseDesc".Translate(),
                     icon = WorldGizmoUtility.JumpToCommand,
                     action = delegate
                     {
-                        CameraJumper.TryJump(owningSettlement);
+                        CameraJumper.TryJumpAndSelect(owningSettlement);
                     }
                 };
             }
