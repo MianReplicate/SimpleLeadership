@@ -12,10 +12,11 @@ namespace SimpleLeadership
     {
         private Dictionary<Faction, FactionLeadershipData> leadershipData;
         private List<PowerEventBase> activeEvents;
-        private bool initialized = false;
+        internal bool initialized = false;
         private List<Faction> keys = [];
         private List<FactionLeadershipData> values = [];
         private List<PowerEventDef> randomSettlementEvents;
+        private float MaxLeaderDistance => 60f * Mathf.Sqrt(Find.WorldGrid.TilesCount / 30000f);
 
         public static WorldComponent_LeaderTracker Instance => Find.World.GetComponent<WorldComponent_LeaderTracker>();
 
@@ -36,6 +37,62 @@ namespace SimpleLeadership
                     initialized = true;
                 }
             });
+        }
+
+        public void AssignLeaderToSettlement(Settlement settlement)
+        {
+            if (settlement?.Faction == null || !IsValidFactionForLeaders(settlement.Faction))
+                return;
+
+            if (!leadershipData.TryGetValue(settlement.Faction, out var data))
+            {
+                data = new FactionLeadershipData();
+                leadershipData[settlement.Faction] = data;
+            }
+
+            if (data.settlementLeaders.ContainsKey(settlement))
+                return;
+
+            float basesPerLeader = 5f;
+            bool isOrbital = settlement.Tile.LayerDef.isSpace;
+            var existingLeaders = data.settlementLeaders
+                .Where(kvp => kvp.Value != null && !kvp.Value.Dead)
+                .Select(kvp => kvp.Value)
+                .Distinct()
+                .ToList();
+
+            Pawn bestLeader = null;
+            float bestDistance = float.MaxValue;
+
+            foreach (var leader in existingLeaders)
+            {
+                var leaderSettlements = data.settlementLeaders
+                    .Where(kvp => kvp.Value == leader)
+                    .Select(kvp => kvp.Key)
+                    .ToList();
+
+                if (leaderSettlements.Count >= basesPerLeader)
+                    continue;
+
+                float nearestDistance = leaderSettlements
+                    .Min(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, settlement.Tile));
+
+                if (!isOrbital && nearestDistance >= MaxLeaderDistance)
+                    continue;
+
+                if (nearestDistance < bestDistance)
+                {
+                    bestDistance = nearestDistance;
+                    bestLeader = leader;
+                }
+            }
+
+            if (bestLeader == null)
+            {
+                bestLeader = GenerateBaseLeader(settlement.Faction);
+            }
+
+            data.settlementLeaders[settlement] = bestLeader;
         }
 
         public override void WorldComponentTick()
@@ -91,60 +148,34 @@ namespace SimpleLeadership
 
         private void InitializeLeaders()
         {
-            float basesPerLeader = 5f;
             foreach (Faction faction in Find.FactionManager.AllFactionsVisible)
             {
-                if (IsValidFactionForLeaders(faction))
+                if (!IsValidFactionForLeaders(faction))
+                    continue;
+
+                if (!leadershipData.TryGetValue(faction, out var data))
                 {
-                    if (!leadershipData.TryGetValue(faction, out var data))
-                    {
-                        data = new FactionLeadershipData();
-                        leadershipData[faction] = data;
-                    }
+                    data = new FactionLeadershipData();
+                    leadershipData[faction] = data;
+                }
 
-                    var factionSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == faction).ToList();
+                var keysToRemove = data.settlementLeaders.Keys.Where(s => s == null).ToList();
+                foreach (var key in keysToRemove)
+                {
+                    data.settlementLeaders.Remove(key);
+                }
 
-                    var leaders = data.settlementLeaders
-                        .Where(kvp => kvp.Key?.Faction == faction && kvp.Value != null && !kvp.Value.Dead)
-                        .Select(kvp => kvp.Value)
-                        .Distinct()
-                        .ToList();
+                var factionSettlements = Find.WorldObjects.Settlements
+                    .Where(s => s.Faction == faction)
+                    .OrderBy(s => Find.WorldGrid.GetTileCenter(s.Tile).x)
+                    .ThenBy(s => Find.WorldGrid.GetTileCenter(s.Tile).z)
+                    .ToList();
 
-                    int requiredLeaders = 0;
-                    if (factionSettlements.Any())
+                foreach (var settlement in factionSettlements)
+                {
+                    if (!data.settlementLeaders.ContainsKey(settlement))
                     {
-                        requiredLeaders = Mathf.CeilToInt(factionSettlements.Count / basesPerLeader);
-                        if (requiredLeaders == 0) requiredLeaders = 1;
-                    }
-
-                    while (leaders.Count < requiredLeaders)
-                    {
-                        var newLeader = GenerateBaseLeader(faction);
-                        leaders.Add(newLeader);
-                    }
-                    while (leaders.Count > requiredLeaders)
-                    {
-                        var removedLeader = leaders.Last();
-                        leaders.RemoveAt(leaders.Count - 1);
-                    }
-
-                    var keysToRemove = data.settlementLeaders.Keys.Where(s => s == null || s.Faction == faction).ToList();
-                    foreach (var key in keysToRemove)
-                    {
-                        data.settlementLeaders.Remove(key);
-                    }
-
-                    if (leaders.Any())
-                    {
-                        for (int i = 0; i < factionSettlements.Count; i++)
-                        {
-                            var settlement = factionSettlements[i];
-                            int leaderIndex = Mathf.FloorToInt(i / basesPerLeader);
-                            if (leaderIndex < leaders.Count)
-                            {
-                                data.settlementLeaders[settlement] = leaders[leaderIndex];
-                            }
-                        }
+                        AssignLeaderToSettlement(settlement);
                     }
                 }
             }
