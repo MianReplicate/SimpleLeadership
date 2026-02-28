@@ -23,7 +23,7 @@ namespace SimpleLeadership
 
             if (nearestSettlement != null)
             {
-                if (nearestSettlement.IsInPowerEvent<PowerStruggle>())
+                if (faction.IsInPowerEvent<PowerVoid>() || nearestSettlement.IsInPowerEvent<PowerStruggle>())
                 {
                     List<SitePartDefWithParams> modifiedSiteParts = [];
                     foreach (var part in siteParts)

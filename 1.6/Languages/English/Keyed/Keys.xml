@@ -18,4 +18,7 @@
   <SL_ActingLeaderChosen>The acting {FACTION_leaderTitle} is {PAWN_nameDef} until a new leader is chosen.</SL_ActingLeaderChosen>
   <SL_PowerVoidEndedLetterLabel>{FACTION_name} has come out of a Power Void.</SL_PowerVoidEndedLetterLabel>
   <SL_NewLeaderElectedLetterBody>{PAWN_nameDef} has been selected as the new faction leader.</SL_NewLeaderElectedLetterBody>
+  <SL_RiotingSuccess>Rioting at {0} succeeded. {PAWN_nameDef} is the new leader.</SL_RiotingSuccess>
+  <SL_SupportArriving>Reinforcements are arriving to support {0}!</SL_SupportArriving>
+  <SL_PrisonersDetected>High value prisoners detected in the area.</SL_PrisonersDetected>
 </LanguageData>
