@@ -36,41 +36,58 @@ namespace SimpleLeadership
 
         private static void SpawnPrisoners(Map map, Faction faction)
         {
-            IntVec3 spawnCenter = IntVec3.Invalid;
-
-            var bed = map.listerBuildings.allBuildingsNonColonist
+            var factionBeds = map.listerBuildings.allBuildingsNonColonist
                 .OfType<Building_Bed>()
-                .FirstOrDefault(b => b.Faction == faction);
+                .Where(b => b.Faction == faction)
+                .ToList();
 
-            if (bed != null)
-            {
-                spawnCenter = bed.Position;
-            }
-            else
-            {
-                CellFinder.TryFindRandomCellNear(map.Center, map, 10, (c) => c.GetRoom(map) != null && !c.GetRoom(map).PsychologicallyOutdoors, out spawnCenter);
-            }
+            if (!factionBeds.Any())
+                return;
 
-            if (spawnCenter.IsValid)
+            var bedsByRoom = factionBeds
+                .GroupBy(b => b.Position.GetRoom(map))
+                .Where(g => g.Key != null)
+                .OrderByDescending(g => g.Count())
+                .ToList();
+
+            List<Building_Bed> selectedBeds = null;
+
+            foreach (var roomGroup in bedsByRoom)
             {
-                int count = Rand.Range(3, 6);
-                for (int i = 0; i < count; i++)
+                int bedCount = roomGroup.Count();
+                if (bedCount >= 3 && bedCount <= 5)
                 {
-                    PawnKindDef slaveKind = PawnKindDefOf.Slave;
-                    PawnGenerationRequest request = new PawnGenerationRequest(slaveKind, faction, PawnGenerationContext.NonPlayer, -1, true);
-                    Pawn prisoner = PawnGenerator.GeneratePawn(request);
-
-                    prisoner.SetFaction(Faction.OfAncients);
-
-                    GenSpawn.Spawn(prisoner, spawnCenter, map);
-
-                    if (prisoner.guest != null)
-                    {
-                        prisoner.guest.SetGuestStatus(faction, GuestStatus.Prisoner);
-                    }
+                    selectedBeds = roomGroup.ToList();
+                    break;
                 }
-                Messages.Message("SL_PrisonersDetected".Translate(), MessageTypeDefOf.NeutralEvent);
             }
+
+            if (selectedBeds == null)
+            {
+                var allBeds = factionBeds.ToList();
+                int takeCount = System.Math.Min(allBeds.Count, Rand.RangeInclusive(3, 5));
+                selectedBeds = allBeds.Take(takeCount).ToList();
+            }
+
+            foreach (var bed in selectedBeds)
+            {
+                bed.ForPrisoners = true;
+
+                PawnKindDef slaveKind = PawnKindDefOf.Slave;
+                PawnGenerationRequest request = new PawnGenerationRequest(slaveKind, faction, PawnGenerationContext.NonPlayer, -1, true);
+                Pawn prisoner = PawnGenerator.GeneratePawn(request);
+
+                prisoner.SetFaction(Faction.OfAncients);
+
+                GenSpawn.Spawn(prisoner, bed.Position, map);
+
+                if (prisoner.guest != null)
+                {
+                    prisoner.guest.SetGuestStatus(faction, GuestStatus.Prisoner);
+                }
+            }
+
+            Messages.Message("SL_PrisonersDetected".Translate(), MessageTypeDefOf.NeutralEvent);
         }
     }
 }
