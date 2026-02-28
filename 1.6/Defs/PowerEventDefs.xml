@@ -9,7 +9,7 @@
     <iconPath>UI/PowerEvents/PowerVoid</iconPath>
     <durationDays>15</durationDays>
     <effects>
-      <li>Defenses at this faction's bases are weakened</li>
+      <li>Defenses at this faction's bases and sites are weakened</li>
       <li>Raids from this faction are disabled</li>
       <li>Captured pawns from this faction have a reduced resistance</li>
     </effects>
@@ -41,7 +41,7 @@
     <startMessage>{0} has begun fortifying its defenses</startMessage>
     <endMessage>{0} has finished fortifying its defenses</endMessage>
     <effects>
-      <li>Threat level is doubled when generating this base.</li>
+      <li>Threat level is doubled when generating this base and its claimed sites.</li>
     </effects>
   </SimpleLeadership.PowerEventDef>
 
@@ -72,6 +72,82 @@
     <endMessage>{0} is no longer vigilant</endMessage>
     <effects>
       <li>Caravans within 10 tiles are much more likely to be noticed.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_Rioting</defName>
+    <label>Rioting</label>
+    <description>This base is fed up with its local leadership and is currently attempting to overthrow them.</description>
+    <workerClass>SimpleLeadership.Rioting</workerClass>
+    <iconPath>UI/PowerEvents/Rioting</iconPath>
+    <durationDays>15</durationDays>
+    <chancePerSeason>0.2</chancePerSeason>
+    <startMessage>{0} has started rioting against its leaders</startMessage>
+    <endMessage>The rioting at {0} has ended with a new leader</endMessage>
+    <effects>
+      <li>At the end of this event, a new base leader is generated.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_Famine</defName>
+    <label>Famine</label>
+    <description>This base is experiencing a famine. Sending food to this base can greatly increase relations.</description>
+    <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
+    <iconPath>UI/PowerEvents/Famine</iconPath>
+    <durationDays>6</durationDays>
+    <chancePerSeason>0.3</chancePerSeason>
+    <startMessage>A famine has struck {0}</startMessage>
+    <endMessage>The famine at {0} has ended</endMessage>
+    <effects>
+      <li>Food given via trade or drop pod will result in +15 Relations.</li>
+      <li>When attacking this base, enemy pawns will generate with malnutrition.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_Sanctioned</defName>
+    <label>Sanctioned</label>
+    <description>This faction has been sanctioned and does not have the funds to trade.</description>
+    <workerClass>SimpleLeadership.Sanctioned</workerClass>
+    <iconPath>UI/PowerEvents/Sanctioned</iconPath>
+    <durationDays>15</durationDays>
+    <startMessage>{0} has been sanctioned</startMessage>
+    <endMessage>Sanctions on {0} have been lifted</endMessage>
+    <effects>
+      <li>Faction bases will refuse to trade.</li>
+      <li>Faction will not send out trade caravans.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_Support</defName>
+    <label>Heavily Supported</label>
+    <description>This base is currently heavily supported by their faction. Any attack on this base will immediately result in reinforcements being called.</description>
+    <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
+    <iconPath>UI/PowerEvents/Support</iconPath>
+    <durationDays>10</durationDays>
+    <chancePerSeason>0.2</chancePerSeason>
+    <startMessage>{0} is receiving heavy support</startMessage>
+    <endMessage>{0} is no longer heavily supported</endMessage>
+    <effects>
+      <li>Attacks on this base will trigger reinforcements immediately.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_PrisonerTransfer</defName>
+    <label>Prisoner Transfer</label>
+    <description>This base is currently supporting a Prisoner Transfer. When attacking there will be a high number of prisoners present.</description>
+    <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
+    <iconPath>UI/PowerEvents/PrisonerTransfer</iconPath>
+    <durationDays>3</durationDays>
+    <chancePerSeason>0.15</chancePerSeason>
+    <startMessage>{0} is conducting a prisoner transfer</startMessage>
+    <endMessage>The prisoner transfer at {0} has concluded</endMessage>
+    <effects>
+      <li>Generating this base will spawn prisoners from this faction during the raid.</li>
     </effects>
   </SimpleLeadership.PowerEventDef>
 
