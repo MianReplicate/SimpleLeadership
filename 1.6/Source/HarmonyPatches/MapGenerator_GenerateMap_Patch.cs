@@ -1,10 +1,10 @@
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-using Verse.AI.Group;
 
 namespace SimpleLeadership
 {
@@ -18,20 +18,36 @@ namespace SimpleLeadership
 
             if (settlement.IsInPowerEvent(PowerEventDefOf.SL_Support) && settlement.Faction.HostileTo(Faction.OfPlayer))
             {
-                IncidentParms parms = StorytellerUtility.DefaultParmsNow(IncidentCategoryDefOf.ThreatBig, __result);
-                parms.faction = settlement.Faction;
-                parms.points = StorytellerUtility.DefaultThreatPointsNow(__result) * 0.5f;
-                parms.raidArrivalMode = PawnsArrivalModeDefOf.EdgeWalkIn;
-
-                Find.Storyteller.incidentQueue.Add(IncidentDefOf.RaidEnemy, Find.TickManager.TicksGame + 200, parms);
-
-                Messages.Message("SL_SupportArriving".Translate(settlement.Label), MessageTypeDefOf.ThreatBig);
+                DoSupportArriving(__result, settlement);
             }
 
             if (settlement.IsInPowerEvent(PowerEventDefOf.SL_PrisonerTransfer))
             {
                 SpawnPrisoners(__result, settlement.Faction);
             }
+        }
+
+        public static void DoSupportArriving(Map map, Settlement settlement)
+        {
+            var comp = map.GetComponent<MapComponent_DelayedRaid>();
+            if (comp.IsScheduled) return;
+
+            float totalCombatPower = 0f;
+            foreach (var pawn in map.mapPawns.AllPawnsSpawned)
+            {
+                if (pawn.HostileTo(Faction.OfPlayer))
+                    totalCombatPower += pawn.kindDef.combatPower;
+            }
+
+            IncidentParms parms = new IncidentParms();
+            parms.target = map;
+            parms.faction = settlement.Faction;
+            parms.points = totalCombatPower * 0.5f;
+            parms.raidArrivalMode = PawnsArrivalModeDefOf.EdgeWalkIn;
+
+            comp.Schedule(parms, 200);
+
+            Messages.Message("SL_SupportArriving".Translate(settlement.Label), MessageTypeDefOf.ThreatBig);
         }
 
         private static void SpawnPrisoners(Map map, Faction faction)
@@ -51,7 +67,6 @@ namespace SimpleLeadership
                 .ToList();
 
             List<Building_Bed> selectedBeds = null;
-
             foreach (var roomGroup in bedsByRoom)
             {
                 int bedCount = roomGroup.Count();
@@ -65,26 +80,19 @@ namespace SimpleLeadership
             if (selectedBeds == null)
             {
                 var allBeds = factionBeds.ToList();
-                int takeCount = System.Math.Min(allBeds.Count, Rand.RangeInclusive(3, 5));
+                int takeCount = Math.Min(allBeds.Count, Rand.RangeInclusive(3, 5));
                 selectedBeds = allBeds.Take(takeCount).ToList();
             }
 
             foreach (var bed in selectedBeds)
             {
                 bed.ForPrisoners = true;
-
-                PawnKindDef slaveKind = PawnKindDefOf.Slave;
-                PawnGenerationRequest request = new PawnGenerationRequest(slaveKind, faction, PawnGenerationContext.NonPlayer, -1, true);
+                PawnGenerationRequest request = new PawnGenerationRequest(PawnKindDefOf.Slave, faction, PawnGenerationContext.NonPlayer, -1, true);
                 Pawn prisoner = PawnGenerator.GeneratePawn(request);
-
                 prisoner.SetFaction(Faction.OfAncients);
-
                 GenSpawn.Spawn(prisoner, bed.Position, map);
-
                 if (prisoner.guest != null)
-                {
                     prisoner.guest.SetGuestStatus(faction, GuestStatus.Prisoner);
-                }
             }
 
             Messages.Message("SL_PrisonersDetected".Translate(), MessageTypeDefOf.NeutralEvent);

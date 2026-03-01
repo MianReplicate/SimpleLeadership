@@ -151,4 +151,18 @@
     </effects>
   </SimpleLeadership.PowerEventDef>
 
+  <SimpleLeadership.PowerEventDef>
+    <defName>SL_Reinforcements</defName>
+    <label>Reinforcements</label>
+    <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
+    <iconPath>UI/PowerEvents/Support</iconPath>
+    <durationDays>10</durationDays>
+    <chancePerSeason>0.2</chancePerSeason>
+    <startMessage>{0} has reinforcements on standby</startMessage>
+    <endMessage>{0} no longer has reinforcements on standby</endMessage>
+    <effects>
+      <li>Attacking this base will immediately trigger reinforcements to be called.</li>
+    </effects>
+  </SimpleLeadership.PowerEventDef>
+
 </Defs>

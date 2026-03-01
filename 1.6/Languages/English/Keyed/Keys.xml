@@ -21,4 +21,6 @@
   <SL_RiotingSuccess>Rioting at {0} succeeded. {PAWN_nameDef} is the new leader.</SL_RiotingSuccess>
   <SL_SupportArriving>Reinforcements are arriving to support {0}!</SL_SupportArriving>
   <SL_PrisonersDetected>High value prisoners detected in the area.</SL_PrisonersDetected>
+  <SL_ReinforcementsCalledLabel>Reinforcements Called</SL_ReinforcementsCalledLabel>
+  <SL_ReinforcementsCalledBody>{0} has called for reinforcements. They will arrive in {1}.</SL_ReinforcementsCalledBody>
 </LanguageData>
