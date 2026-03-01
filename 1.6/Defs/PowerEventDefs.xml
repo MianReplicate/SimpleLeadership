@@ -155,7 +155,7 @@
     <defName>SL_Reinforcements</defName>
     <label>Reinforcements</label>
     <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
-    <iconPath>UI/PowerEvents/Support</iconPath>
+    <iconPath>UI/PowerEvents/Reinforcements</iconPath>
     <durationDays>10</durationDays>
     <chancePerSeason>0.2</chancePerSeason>
     <startMessage>{0} has reinforcements on standby</startMessage>
