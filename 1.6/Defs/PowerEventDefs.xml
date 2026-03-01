@@ -80,7 +80,7 @@
     <label>Rioting</label>
     <description>This base is fed up with its local leadership and is currently attempting to overthrow them.</description>
     <workerClass>SimpleLeadership.Rioting</workerClass>
-    <iconPath>UI/PowerEvents/Rioting</iconPath>
+    <iconPath>UI/PowerEvents/Riot</iconPath>
     <durationDays>15</durationDays>
     <chancePerSeason>0.2</chancePerSeason>
     <startMessage>{0} has started rioting against its leaders</startMessage>
@@ -111,7 +111,7 @@
     <label>Sanctioned</label>
     <description>This faction has been sanctioned and does not have the funds to trade.</description>
     <workerClass>SimpleLeadership.Sanctioned</workerClass>
-    <iconPath>UI/PowerEvents/Sanctioned</iconPath>
+    <iconPath>UI/PowerEvents/Sanction</iconPath>
     <durationDays>15</durationDays>
     <startMessage>{0} has been sanctioned</startMessage>
     <endMessage>Sanctions on {0} have been lifted</endMessage>
@@ -124,7 +124,7 @@
   <SimpleLeadership.PowerEventDef>
     <defName>SL_Support</defName>
     <label>Heavily Supported</label>
-    <description>This base is currently heavily supported by their faction. Any attack on this base will immediately result in reinforcements being called.</description>
+    <description>This base is currently heavily supported by their faction. Any attack on this base will cause them to use their best equipment.</description>
     <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
     <iconPath>UI/PowerEvents/Support</iconPath>
     <durationDays>10</durationDays>
@@ -132,7 +132,7 @@
     <startMessage>{0} is receiving heavy support</startMessage>
     <endMessage>{0} is no longer heavily supported</endMessage>
     <effects>
-      <li>Attacks on this base will trigger reinforcements immediately.</li>
+      <li>Attacks on this base will trigger heavy defense deployments.</li>
     </effects>
   </SimpleLeadership.PowerEventDef>
 
