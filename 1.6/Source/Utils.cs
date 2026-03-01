@@ -32,7 +32,6 @@ namespace SimpleLeadership
             }
         }
 
-
         public static bool IsInPowerEvent<T>(this object obj) where T : PowerEventBase
         {
             return WorldComponent_LeaderTracker.Instance.IsInPowerEvent<T>(obj);
@@ -63,7 +62,7 @@ namespace SimpleLeadership
                 int settlementCount = Find.WorldObjects.Settlements.Count(s => s.Faction == faction);
                 if (settlementCount > 0)
                 {
-                    spawnChance = 1f / (float)settlementCount;
+                    spawnChance = 1f / settlementCount;
                 }
             }
             else
@@ -101,6 +100,37 @@ namespace SimpleLeadership
                     }
                 }
             }
+        }
+
+        public static void HandleLeaderLost(Faction faction, Pawn oldLeader, string labelKey, string bodyKey, string leaderNamedKey)
+        {
+            string label = labelKey.Translate(faction.Name, faction.LeaderTitle).Resolve().CapitalizeFirst();
+            string body = bodyKey.Translate(faction.NameColored, faction.LeaderTitle, oldLeader.Named(leaderNamedKey)).Resolve().CapitalizeFirst();
+
+            var leaderTracker = WorldComponent_LeaderTracker.Instance;
+            var candidates = leaderTracker.GetBaseLeadersFor(faction).Where(p => p != null && !p.Dead && p != oldLeader).ToList();
+            
+            if (candidates.Any())
+            {
+                var actingLeader = candidates.RandomElement();
+                var data = leaderTracker.GetLeadershipDataFor(faction);
+                if (data != null)
+                {
+                    data.actingLeader = actingLeader;
+                }
+                
+                string actingLeaderText = "SL_ActingLeaderChosen".Translate(faction.LeaderTitle.Named("LEADERTITLE"), actingLeader.Named("PAWN")).Resolve();
+                body += "\n\n" + actingLeaderText;
+            }
+
+            if (!faction.temporary)
+            {
+                Find.LetterStack.ReceiveLetter(label, body, LetterDefOf.NeutralEvent, oldLeader, faction);
+            }
+            
+            leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerVoid, faction);
+            
+            faction.leader = null;
         }
     }
 }

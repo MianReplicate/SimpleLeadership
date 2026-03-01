@@ -15,7 +15,7 @@
   <SL_LeaderName>Name:</SL_LeaderName>
   <SL_SpawnChance>Spawn Chance:</SL_SpawnChance>
   <SL_VigilantBonus>Vigilant ({0})</SL_VigilantBonus>
-  <SL_ActingLeaderChosen>The acting {FACTION_leaderTitle} is {PAWN_nameDef} until a new leader is chosen.</SL_ActingLeaderChosen>
+  <SL_ActingLeaderChosen>The acting {LEADERTITLE} is {PAWN_nameDef} until a new leader is chosen.</SL_ActingLeaderChosen>
   <SL_PowerVoidEndedLetterLabel>{FACTION_name} has come out of a Power Void.</SL_PowerVoidEndedLetterLabel>
   <SL_NewLeaderElectedLetterBody>{PAWN_nameDef} has been selected as the new faction leader.</SL_NewLeaderElectedLetterBody>
   <SL_RiotingSuccess>Rioting at {0} succeeded. {PAWN_nameDef} is the new leader.</SL_RiotingSuccess>
@@ -23,4 +23,6 @@
   <SL_PrisonersDetected>High value prisoners detected in the area.</SL_PrisonersDetected>
   <SL_ReinforcementsCalledLabel>Reinforcements Called</SL_ReinforcementsCalledLabel>
   <SL_ReinforcementsCalledBody>{0} has called for reinforcements. They will arrive in {1}.</SL_ReinforcementsCalledBody>
+  <SL_LeaderCapturedLabel>{1} captured: {0}</SL_LeaderCapturedLabel>
+  <SL_LeaderCaptured>{LEADER_nameFull}, {1} of {0}, has been captured.</SL_LeaderCaptured>
 </LanguageData>

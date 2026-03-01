@@ -254,11 +254,20 @@ namespace SimpleLeadership
                 {
                     for (int i = activeEvents.Count - 1; i >= 0; i--)
                     {
-                        var existingEvent = activeEvents[i];
-                        if (existingEvent is SettlementPowerEvent && existingEvent.IsTarget(targetSettlement))
-                        {
-                            EndPowerEvent(existingEvent);
-                        }
+                        if (activeEvents[i] is SettlementPowerEvent && activeEvents[i].IsTarget(targetSettlement))
+                            EndPowerEvent(activeEvents[i]);
+                    }
+                }
+            }
+            else if (def == PowerEventDefOf.SL_PowerVoid)
+            {
+                Faction targetFaction = args.OfType<Faction>().FirstOrDefault();
+                if (targetFaction != null)
+                {
+                    for (int i = activeEvents.Count - 1; i >= 0; i--)
+                    {
+                        if (activeEvents[i].IsTarget(targetFaction))
+                            EndPowerEvent(activeEvents[i]);
                     }
                 }
             }
