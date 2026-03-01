@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
@@ -12,39 +13,48 @@ namespace SimpleLeadership
     {
         public static void Postfix(ref IEnumerable<Pawn> __result, PawnGroupMakerParms parms)
         {
-            if (parms == null || parms.faction == null)
+            if (parms == null || parms.faction == null || parms.faction.def.humanlikeFaction is false)
                 return;
-            Settlement settlement = RaidContext.CurrentOrigin;
-            if (settlement == null || settlement.Faction != parms.faction)
+            try
             {
-                settlement = Find.WorldObjects.Settlements
-                    .Where(s => s.Faction == parms.faction)
-                    .MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(parms.tile, s.Tile));
-            }
-            if (settlement == null) return;
-            
-            List<Pawn> pawnList = __result.ToList();
-
-            Pawn factionLeader = parms.faction.leader;
-            if (factionLeader != null && !factionLeader.Dead && !factionLeader.Spawned && !__result.Contains(factionLeader))
-            {
-                float spawnChance = Utils.CalculateSpawnChance(factionLeader, parms.faction, settlement);
-                if (Rand.Chance(spawnChance))
+                Settlement settlement = RaidContext.CurrentOrigin;
+                if (settlement == null || settlement.Faction != parms.faction)
                 {
-                    pawnList.Add(factionLeader);
-                    __result = pawnList;
+                    var factionSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == parms.faction);
+                    if (factionSettlements.Any())
+                    {
+                        settlement = factionSettlements.MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(parms.tile, s.Tile));
+                    }
+                }
+                if (settlement == null) return;
+
+                List<Pawn> pawnList = __result.ToList();
+
+                Pawn factionLeader = parms.faction.leader;
+                if (factionLeader != null && !factionLeader.Dead && !factionLeader.Spawned && !__result.Contains(factionLeader))
+                {
+                    float spawnChance = Utils.CalculateSpawnChance(factionLeader, parms.faction, settlement);
+                    if (Rand.Chance(spawnChance))
+                    {
+                        pawnList.Add(factionLeader);
+                        __result = pawnList;
+                    }
+                }
+
+                Pawn baseLeader = WorldComponent_LeaderTracker.Instance.GetBaseLeader(settlement);
+                if (baseLeader != null && !baseLeader.Dead && !baseLeader.Spawned && !pawnList.Contains(baseLeader))
+                {
+                    float spawnChance = Utils.CalculateSpawnChance(baseLeader, parms.faction, settlement);
+                    if (Rand.Chance(spawnChance))
+                    {
+                        pawnList.Add(baseLeader);
+                        __result = pawnList;
+                    }
                 }
             }
-
-            Pawn baseLeader = WorldComponent_LeaderTracker.Instance.GetBaseLeader(settlement);
-            if (baseLeader != null && !baseLeader.Dead && !baseLeader.Spawned && !pawnList.Contains(baseLeader))
+            catch (Exception ex)
             {
-                float spawnChance = Utils.CalculateSpawnChance(baseLeader, parms.faction, settlement);
-                if (Rand.Chance(spawnChance))
-                {
-                    pawnList.Add(baseLeader);
-                    __result = pawnList;
-                }
+                Log.Error("[SimpleLeadership] Error in PawnGroupMakerUtility_GeneratePawns_Patch: " + ex.Message);
             }
         }
     }
