@@ -24,6 +24,8 @@ namespace SimpleLeadership
 
         public override bool ShouldGiveMessage()
         {
+            if (settlement == null) return false;
+
             var playerSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == Faction.OfPlayer);
             if (!playerSettlements.Any()) return false;
 

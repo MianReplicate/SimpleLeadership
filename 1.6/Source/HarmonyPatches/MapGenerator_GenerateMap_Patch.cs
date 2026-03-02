@@ -25,6 +25,17 @@ namespace SimpleLeadership
             {
                 SpawnPrisoners(__result, settlement.Faction);
             }
+            else if (__result.Parent is Site site)
+            {
+                var ownerComp = site.GetComponent<WorldObjectComp_SiteOwnership>();
+                if (ownerComp?.owningSettlement != null
+                    && ownerComp.owningSettlement.IsInPowerEvent(PowerEventDefOf.SL_Support)
+                    && site.Faction != null
+                    && site.Faction.HostileTo(Faction.OfPlayer))
+                {
+                    DoSupportArriving(__result, ownerComp.owningSettlement);
+                }
+            }
         }
 
         public static void DoSupportArriving(Map map, Settlement settlement)

@@ -52,7 +52,7 @@ namespace SimpleLeadership
             float columnWidth = (mainRect.width - ColumnSpacing) / 2f;
 
             Rect leftColumnRect = new Rect(mainRect.x, mainRect.y, columnWidth, mainRect.height).ContractedBy(10f);
-            Rect rightColumnRect = new Rect(leftColumnRect.xMax + ColumnSpacing, mainRect.y, columnWidth, mainRect.height).ContractedBy(10f);
+            Rect rightColumnRect = new Rect(mainRect.x + columnWidth + ColumnSpacing, mainRect.y, columnWidth, mainRect.height).ContractedBy(10f);
 
             Pawn factionLeader = faction.leader;
             string factionLeaderLocation = GetLeaderLocationText(factionLeader);
@@ -71,7 +71,8 @@ namespace SimpleLeadership
 
             Text.Font = GameFont.Medium;
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(new Rect(rect.x, curY, rect.width, TitleHeight), titleKey.Translate().ToString().ToUpper());
+            Rect titleRect = new Rect(rect.x, curY, rect.width, TitleHeight);
+            Widgets.Label(titleRect, titleKey.Translate());
             curY += TitleHeight + SectionSpacing;
             Text.Anchor = TextAnchor.UpperLeft;
             Text.Font = GameFont.Small;
@@ -80,8 +81,8 @@ namespace SimpleLeadership
             curY += PortraitSize + SectionSpacing;
 
             string leaderName = leader != null ? leader.Name.ToStringFull : "SL_NotAvailable".Translate().ToString();
-            DrawInfoRow(ref curY, rect, "SL_LeaderName".Translate().ToString().ToUpper(), leaderName);
-            DrawInfoRow(ref curY, rect, "SL_Location".Translate().ToString().ToUpper(), locationText);
+            DrawInfoRow(ref curY, rect, "SL_LeaderName".Translate(), leaderName);
+            DrawInfoRow(ref curY, rect, "SL_Location".Translate(), locationText);
 
             if (leader != null && !leader.Dead)
             {
@@ -96,7 +97,7 @@ namespace SimpleLeadership
             Widgets.DrawLineHorizontal(isLeft ? 0f : size.x / 2f, curY, size.x / 2f, Color.gray);
             curY += SectionSpacing;
 
-            Widgets.Label(new Rect(rect.x, curY, rect.width, InfoRowHeight), "SL_CurrentEvents".Translate().ToString().ToUpper());
+            Widgets.Label(new Rect(rect.x, curY, rect.width, InfoRowHeight), "SL_CurrentEvents".Translate());
             curY += InfoRowHeight;
 
             DrawEvents(new Rect(rect.x, curY, rect.width, EventButtonHeight), faction, settlement, leaderTracker, isLeft);
@@ -136,11 +137,10 @@ namespace SimpleLeadership
             curY += InfoRowHeight;
         }
 
-
         private void DrawSpawnChance(ref float curY, Rect container, float spawnChance)
         {
             Rect rowRect = new Rect(container.x, curY, container.width, InfoRowHeight);
-            Widgets.Label(rowRect, "SL_SpawnChance".Translate().ToString().ToUpper());
+            Widgets.Label(rowRect, "SL_EncounterChance".Translate());
 
             Text.Anchor = TextAnchor.MiddleRight;
             Color originalColor = GUI.color;
@@ -169,7 +169,7 @@ namespace SimpleLeadership
         private void DrawEvents(Rect rect, Faction faction, Settlement settlement, WorldComponent_LeaderTracker leaderTracker, bool isFactionColumn)
         {
             var events = isFactionColumn ? faction.GetActiveEvents<PowerEventBase>() : settlement.GetActiveEvents<PowerEventBase>();
-            
+
             if (events.Any())
             {
                 float currentY = rect.y;
@@ -178,7 +178,7 @@ namespace SimpleLeadership
                     float iconSize = 30f;
                     float padding = 5f;
                     float textWidth = rect.width - iconSize - (padding * 3);
-                    
+
                     Text.Font = GameFont.Small;
                     float textHeight = Text.CalcHeight(powerEvent.def.LabelCap, textWidth);
                     float eventHeight = Mathf.Max(iconSize + (padding * 2), textHeight + (padding * 2));

@@ -4,7 +4,7 @@
   <SL_FactionLeadership>Faction Leadership</SL_FactionLeadership>
   <SL_BaseLeadership>Base Leadership</SL_BaseLeadership>
   <SL_RaidOriginInfo>(This raid originated from Base {0})</SL_RaidOriginInfo>
-  <SL_RaidOriginLeaderInfo>Base Leader {PAWN_nameDef} decided to join this raid, if you can capture or kill them - all future raids from this base will be weakened.</SL_RaidOriginLeaderInfo>
+  <SL_RaidOriginLeaderInfo>Base Leader {0} decided to join this raid, if you can capture or kill them - all future raids from this base will be weakened.</SL_RaidOriginLeaderInfo>
   <SL_SiteOwnershipInfo>Base {0} has claimed ownership of this site.</SL_SiteOwnershipInfo>
   <SL_JumpToBase>Jump to {0}</SL_JumpToBase>
   <SL_JumpToBaseDesc>Jump to the base that owns this site.</SL_JumpToBaseDesc>
@@ -14,6 +14,7 @@
   <SL_None>None</SL_None>
   <SL_LeaderName>Name:</SL_LeaderName>
   <SL_SpawnChance>Spawn Chance:</SL_SpawnChance>
+  <SL_EncounterChance>Encounter Chance:</SL_EncounterChance>
   <SL_VigilantBonus>Vigilant ({0})</SL_VigilantBonus>
   <SL_ActingLeaderChosen>The acting {LEADERTITLE} is {PAWN_nameDef} until a new leader is chosen.</SL_ActingLeaderChosen>
   <SL_PowerVoidEndedLetterLabel>{FACTION_name} has come out of a Power Void.</SL_PowerVoidEndedLetterLabel>
@@ -25,4 +26,7 @@
   <SL_ReinforcementsCalledBody>{0} has called for reinforcements. They will arrive in {1}.</SL_ReinforcementsCalledBody>
   <SL_LeaderCapturedLabel>{1} captured: {0}</SL_LeaderCapturedLabel>
   <SL_LeaderCaptured>{LEADER_nameFull}, {1} of {0}, has been captured.</SL_LeaderCaptured>
+  <SL_SanctionedCannotTrade>Cannot trade with this faction. They are sanctioned.</SL_SanctionedCannotTrade>
+  <SL_FactionLeaderValueBonus>Faction leader</SL_FactionLeaderValueBonus>
+  <SL_BaseLeaderValueBonus>Base leader</SL_BaseLeaderValueBonus>
 </LanguageData>
