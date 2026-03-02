@@ -12,6 +12,7 @@ namespace SimpleLeadership
     {
         private Dictionary<Faction, FactionLeadershipData> leadershipData;
         private List<PowerEventBase> activeEvents;
+        private Dictionary<object, List<PowerEventBase>> eventsByTarget = new();
         internal bool initialized = false;
         private List<Faction> keys = [];
         private List<FactionLeadershipData> values = [];
@@ -143,6 +144,15 @@ namespace SimpleLeadership
             {
                 leadershipData ??= [];
                 activeEvents ??= [];
+                eventsByTarget = new Dictionary<object, List<PowerEventBase>>();
+                foreach (var ev in activeEvents)
+                {
+                    var target = ev.GetTarget();
+                    if (target == null) continue;
+                    if (!eventsByTarget.TryGetValue(target, out var list))
+                        eventsByTarget[target] = list = new List<PowerEventBase>();
+                    list.Add(ev);
+                }
             }
         }
 
@@ -277,11 +287,22 @@ namespace SimpleLeadership
             newEvent.Initialize(def, args);
             newEvent.OnStart();
             activeEvents.Add(newEvent);
+
+            var target = newEvent.GetTarget();
+            if (target != null)
+            {
+                if (!eventsByTarget.TryGetValue(target, out var list))
+                    eventsByTarget[target] = list = new List<PowerEventBase>();
+                list.Add(newEvent);
+            }
         }
 
         public List<PowerEventBase> GetActiveEventsFor(object target)
         {
-            return activeEvents.Where(ev => ev.IsTarget(target)).ToList();
+            if (target == null) return new List<PowerEventBase>();
+            return eventsByTarget.TryGetValue(target, out var list)
+                ? list
+                : new List<PowerEventBase>();
         }
 
         public bool IsInPowerEvent<T>(object target) where T : PowerEventBase
@@ -291,6 +312,12 @@ namespace SimpleLeadership
 
         public void EndPowerEvent(PowerEventBase eventToEnd)
         {
+            var target = eventToEnd.GetTarget();
+            if (target != null && eventsByTarget.TryGetValue(target, out var list))
+            {
+                list.Remove(eventToEnd);
+                if (list.Count == 0) eventsByTarget.Remove(target);
+            }
             eventToEnd.OnResolve();
             activeEvents.Remove(eventToEnd);
         }

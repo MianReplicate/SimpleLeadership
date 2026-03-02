@@ -25,6 +25,8 @@ namespace SimpleLeadership
             return target is Faction f && f == faction;
         }
 
+        public override object GetTarget() => faction;
+
         public override void ExposeData()
         {
             base.ExposeData();

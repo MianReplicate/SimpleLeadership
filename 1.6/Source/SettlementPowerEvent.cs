@@ -41,6 +41,8 @@ namespace SimpleLeadership
             return target is Settlement s && s == settlement;
         }
 
+        public override object GetTarget() => settlement;
+
         public override void ExposeData()
         {
             base.ExposeData();

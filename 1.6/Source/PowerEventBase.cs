@@ -60,6 +60,8 @@ namespace SimpleLeadership
 
         public abstract bool IsTarget(object target);
 
+        public virtual object GetTarget() => null;
+
         public virtual void ExposeData()
         {
             Scribe_Defs.Look(ref def, "def");
