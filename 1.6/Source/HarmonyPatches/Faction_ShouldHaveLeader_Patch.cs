@@ -8,7 +8,7 @@ namespace SimpleLeadership
     {
         public static void Postfix(Faction __instance, ref bool __result)
         {
-            if (__result && __instance.IsInPowerEvent<PowerVoid>())
+            if (__result && __instance.leader == null && __instance.IsInPowerEvent<PowerVoid>())
             {
                 __result = false;
             }
