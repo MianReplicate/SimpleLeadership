@@ -154,6 +154,7 @@
   <SimpleLeadership.PowerEventDef>
     <defName>SL_Reinforcements</defName>
     <label>Reinforcements</label>
+    <description>This base currently has reinforcements on standby. They will call them if attacked.</description>
     <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
     <iconPath>UI/PowerEvents/Reinforcements</iconPath>
     <durationDays>10</durationDays>
