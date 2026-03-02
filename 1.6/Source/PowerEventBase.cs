@@ -32,8 +32,7 @@ namespace SimpleLeadership
         {
             if (ShouldGiveMessage() && !string.IsNullOrEmpty(def.startMessage))
             {
-                string message = GetFormattedMessage(def.startMessage);
-                Messages.Message(message, MessageTypeDefOf.NeutralEvent);
+                SendMessage(GetFormattedMessage(def.startMessage), MessageTypeDefOf.NeutralEvent);
             }
         }
 
@@ -41,8 +40,20 @@ namespace SimpleLeadership
         {
             if (ShouldGiveMessage() && !string.IsNullOrEmpty(def.endMessage))
             {
-                string message = GetFormattedMessage(def.endMessage);
-                Messages.Message(message, MessageTypeDefOf.NeutralEvent);
+                SendMessage(GetFormattedMessage(def.endMessage), MessageTypeDefOf.NeutralEvent);
+            }
+        }
+
+        protected void SendMessage(string message, MessageTypeDef type)
+        {
+            var target = GetTarget();
+            if (target is LookTargets lookTargets)
+            {
+                Messages.Message(message, lookTargets, type);
+            }
+            else
+            {
+                Messages.Message(message, type);
             }
         }
 

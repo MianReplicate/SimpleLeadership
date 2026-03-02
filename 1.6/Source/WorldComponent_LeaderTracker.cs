@@ -19,12 +19,13 @@ namespace SimpleLeadership
         private List<PowerEventDef> randomSettlementEvents;
         private float MaxLeaderDistance => 60f * Mathf.Sqrt(Find.WorldGrid.TilesCount / 30000f);
 
-        public static WorldComponent_LeaderTracker Instance => Find.World.GetComponent<WorldComponent_LeaderTracker>();
+        public static WorldComponent_LeaderTracker Instance;
 
         public WorldComponent_LeaderTracker(World world) : base(world)
         {
             leadershipData = [];
             activeEvents = [];
+            Instance = this;
         }
 
         public override void FinalizeInit(bool fromLoad)
@@ -135,6 +136,7 @@ namespace SimpleLeadership
 
         public override void ExposeData()
         {
+            Instance = this;
             base.ExposeData();
             Scribe_Collections.Look(ref leadershipData, "baseLeaderData", LookMode.Reference, LookMode.Deep, ref keys, ref values);
             Scribe_Collections.Look(ref activeEvents, "activeEvents", LookMode.Deep);

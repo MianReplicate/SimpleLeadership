@@ -16,7 +16,7 @@ namespace SimpleLeadership
                 Pawn newLeader = leaderTracker.GenerateBaseLeader(faction);
                 data.settlementLeaders[settlement] = newLeader;
 
-                Messages.Message("SL_RiotingSuccess".Translate(settlement.Label, newLeader.Named("PAWN")), settlement, MessageTypeDefOf.NeutralEvent);
+                SendMessage("SL_RiotingSuccess".Translate(settlement.Label, newLeader.Named("PAWN")), MessageTypeDefOf.NeutralEvent);
             }
             base.OnResolve();
         }
