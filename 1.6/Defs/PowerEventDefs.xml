@@ -101,7 +101,6 @@
     <startMessage>A famine has struck {0}</startMessage>
     <endMessage>The famine at {0} has ended</endMessage>
     <effects>
-      <li>Food given via trade or drop pod will result in +15 Relations.</li>
       <li>When attacking this base, enemy pawns will generate with malnutrition.</li>
     </effects>
   </SimpleLeadership.PowerEventDef>
