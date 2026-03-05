@@ -93,7 +93,7 @@
   <SimpleLeadership.PowerEventDef>
     <defName>SL_Famine</defName>
     <label>Famine</label>
-    <description>This base is experiencing a famine. Sending food to this base can greatly increase relations.</description>
+    <description>This base is experiencing a famine. Most pawns are experiencing starvation.</description>
     <workerClass>SimpleLeadership.SettlementPowerEvent</workerClass>
     <iconPath>UI/PowerEvents/Famine</iconPath>
     <durationDays>6</durationDays>
@@ -101,7 +101,7 @@
     <startMessage>A famine has struck {0}</startMessage>
     <endMessage>The famine at {0} has ended</endMessage>
     <effects>
-      <li>When attacking this base, enemy pawns will generate with malnutrition.</li>
+      <li>When attacking this base, enemy pawns will be inflicted with malnutrition.</li>
     </effects>
   </SimpleLeadership.PowerEventDef>
 
