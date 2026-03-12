@@ -25,6 +25,7 @@ namespace SimpleLeadership
         public override bool ShouldGiveMessage()
         {
             if (settlement == null) return false;
+            if (settlement.Tile.LayerDef != null && settlement.Tile.LayerDef.isSpace) return false;
 
             var playerSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == Faction.OfPlayer);
             if (!playerSettlements.Any()) return false;

@@ -201,15 +201,24 @@ namespace SimpleLeadership
         public Pawn GenerateBaseLeader(Faction faction)
         {
             PawnKindDef leaderKind = faction.RandomPawnKind();
-            PawnGenerationRequest request = new PawnGenerationRequest(leaderKind, faction, PawnGenerationContext.NonPlayer, forceGenerateNewPawn: true);
-            Pawn newLeader = PawnGenerator.GeneratePawn(request);
-
-            if (newLeader != null && !Find.WorldPawns.Contains(newLeader))
+            if (leaderKind == null) return null;
+            try
             {
-                Find.WorldPawns.PassToWorld(newLeader, PawnDiscardDecideMode.KeepForever);
-            }
+                PawnGenerationRequest request = new PawnGenerationRequest(leaderKind, faction, PawnGenerationContext.NonPlayer, forceGenerateNewPawn: true);
+                Pawn newLeader = PawnGenerator.GeneratePawn(request);
 
-            return newLeader;
+                if (newLeader != null && !Find.WorldPawns.Contains(newLeader))
+                {
+                    Find.WorldPawns.PassToWorld(newLeader, PawnDiscardDecideMode.KeepForever);
+                }
+
+                return newLeader;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SimpleLeadership] Failed to generate base leader for {faction.Name}: {ex.Message}");
+                return null;
+            }
         }
 
         public Pawn GetBaseLeader(Settlement settlement)
