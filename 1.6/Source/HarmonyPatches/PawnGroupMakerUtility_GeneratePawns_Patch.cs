@@ -28,12 +28,19 @@ namespace SimpleLeadership
                 }
                 if (settlement == null) return;
 
+                bool isRaidingPlayer = false;
+                MapParent mapParent = Find.WorldObjects.MapParentAt(parms.tile);
+                if (mapParent != null && mapParent.HasMap && mapParent.Map.ParentFaction == Faction.OfPlayer)
+                {
+                    isRaidingPlayer = true;
+                }
+
                 List<Pawn> pawnList = __result.ToList();
 
                 Pawn factionLeader = parms.faction.leader;
                 if (factionLeader != null && !factionLeader.Dead && !factionLeader.Spawned && !__result.Contains(factionLeader))
                 {
-                    float spawnChance = Utils.CalculateSpawnChance(factionLeader, parms.faction, settlement);
+                    float spawnChance = Utils.CalculateSpawnChance(factionLeader, parms.faction, settlement, isRaidingPlayer);
                     if (Rand.Chance(spawnChance))
                     {
                         pawnList.Add(factionLeader);
@@ -44,7 +51,7 @@ namespace SimpleLeadership
                 Pawn baseLeader = WorldComponent_LeaderTracker.Instance.GetBaseLeader(settlement);
                 if (baseLeader != null && !baseLeader.Dead && !baseLeader.Spawned && !pawnList.Contains(baseLeader))
                 {
-                    float spawnChance = Utils.CalculateSpawnChance(baseLeader, parms.faction, settlement);
+                    float spawnChance = Utils.CalculateSpawnChance(baseLeader, parms.faction, settlement, isRaidingPlayer);
                     if (Rand.Chance(spawnChance))
                     {
                         pawnList.Add(baseLeader);

@@ -49,28 +49,28 @@ namespace SimpleLeadership
             return WorldComponent_LeaderTracker.Instance.GetActiveEventsFor(obj).OfType<T>();
         }
 
-        public static float CalculateSpawnChance(Pawn leader, Faction faction, Settlement settlement)
+        public static float CalculateSpawnChance(Pawn leader, Faction faction, Settlement settlement, bool isRaidingPlayer = false)
         {
             if (leader == null || leader.Dead || leader.Spawned)
                 return 0f;
 
-            var leaderTracker = WorldComponent_LeaderTracker.Instance;
-            float spawnChance = 0f;
-
-            if (leader == faction.leader)
+            float spawnChance;
+            if (isRaidingPlayer)
             {
-                int settlementCount = Find.WorldObjects.Settlements.Count(s => s.Faction == faction);
-                if (settlementCount > 0)
-                {
-                    spawnChance = 1f / settlementCount;
-                }
+                spawnChance = leader == faction.leader ? 0.01f : 0.05f;
             }
             else
             {
-                int controlledBases = Find.WorldObjects.Settlements.Count(s => s.Faction == faction && leaderTracker.GetBaseLeader(s) == leader);
-                if (controlledBases > 0)
+                var leaderTracker = WorldComponent_LeaderTracker.Instance;
+                if (leader == faction.leader)
                 {
-                    spawnChance = 1f / controlledBases;
+                    int settlementCount = Find.WorldObjects.Settlements.Count(s => s.Faction == faction);
+                    spawnChance = settlementCount > 0 ? 1f / settlementCount : 0f;
+                }
+                else
+                {
+                    int controlledBases = Find.WorldObjects.Settlements.Count(s => s.Faction == faction && leaderTracker.GetBaseLeader(s) == leader);
+                    spawnChance = controlledBases > 0 ? 1f / controlledBases : 0f;
                 }
             }
 
