@@ -1,8 +1,10 @@
 using Verse;
 using RimWorld;
+using RimWorld.Planet;
 
 namespace SimpleLeadership
 {
+    [HotSwappable]
     public abstract class PowerEventBase : IExposable
     {
         public PowerEventDef def;
@@ -47,9 +49,9 @@ namespace SimpleLeadership
         protected void SendMessage(string message, MessageTypeDef type)
         {
             var target = GetTarget();
-            if (target is LookTargets lookTargets)
+            if (target is WorldObject worldObject)
             {
-                Messages.Message(message, lookTargets, type);
+                Messages.Message(message, worldObject, type);
             }
             else
             {
