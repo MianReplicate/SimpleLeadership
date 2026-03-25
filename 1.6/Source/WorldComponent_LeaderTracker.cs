@@ -146,6 +146,7 @@ namespace SimpleLeadership
             {
                 leadershipData ??= [];
                 activeEvents ??= [];
+                activeEvents.RemoveAll(ev => ev.GetTarget() == null);
                 eventsByTarget = new Dictionary<object, List<PowerEventBase>>();
                 foreach (var ev in activeEvents)
                 {
