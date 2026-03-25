@@ -20,7 +20,7 @@ namespace SimpleLeadership
                         if (__result.Faction == settlement.Faction)
                         {
                             var hediff = HediffMaker.MakeHediff(HediffDefOf.Malnutrition, __result);
-                            hediff.Severity = Rand.Range(0.2f, 0.4f);
+                            hediff.Severity = Rand.Range(0.2f, 0.85f);
                             __result.health.AddHediff(hediff);
                         }
                     }

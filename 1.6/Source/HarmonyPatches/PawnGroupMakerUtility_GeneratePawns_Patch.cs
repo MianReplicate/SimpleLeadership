@@ -35,6 +35,16 @@ namespace SimpleLeadership
                     isRaidingPlayer = true;
                 }
 
+                if (isRaidingPlayer)
+                {
+                    var tracker = WorldComponent_LeaderTracker.Instance;
+                    if (tracker.lastLeaderRaidTick.TryGetValue(parms.faction, out int lastTick) && Find.TickManager.TicksGame < lastTick + 30000)
+                    {
+                        return;
+                    }
+                    tracker.lastLeaderRaidTick[parms.faction] = Find.TickManager.TicksGame;
+                }
+
                 List<Pawn> pawnList = __result.ToList();
 
                 Pawn factionLeader = parms.faction.leader;

@@ -49,6 +49,17 @@ namespace SimpleLeadership
             return WorldComponent_LeaderTracker.Instance.GetActiveEventsFor(obj).OfType<T>();
         }
 
+        public static bool IsValidLeaderCandidate(this Pawn pawn)
+        {
+            if (pawn == null || pawn.Dead)
+                return false;
+            if (pawn.IsPrisonerOfColony)
+                return false;
+            if (pawn.MapHeld != null && pawn.MapHeld.IsPlayerHome)
+                return false;
+            return true;
+        }
+
         public static float CalculateSpawnChance(Pawn leader, Faction faction, Settlement settlement, bool isRaidingPlayer = false)
         {
             if (leader == null || leader.Dead || leader.Spawned)
@@ -57,7 +68,8 @@ namespace SimpleLeadership
             float spawnChance;
             if (isRaidingPlayer)
             {
-                spawnChance = leader == faction.leader ? 0.01f : 0.05f;
+                float baseChance = SimpleLeadershipMod.Settings.leaderSpawnChance;
+                spawnChance = leader == faction.leader ? baseChance * 0.2f : baseChance;
             }
             else
             {
@@ -96,7 +108,8 @@ namespace SimpleLeadership
                 {
                     foreach (var settlement in leaderSettlements)
                     {
-                        leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, settlement);
+                        if (SimpleLeadershipMod.Settings.enableEvents)
+                            leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerStruggle, settlement);
                     }
                 }
             }
@@ -108,7 +121,7 @@ namespace SimpleLeadership
             string body = bodyKey.Translate(faction.NameColored, faction.LeaderTitle, oldLeader.Named(leaderNamedKey)).Resolve().CapitalizeFirst();
 
             var leaderTracker = WorldComponent_LeaderTracker.Instance;
-            var candidates = leaderTracker.GetBaseLeadersFor(faction).Where(p => p != null && !p.Dead && p != oldLeader).ToList();
+            var candidates = leaderTracker.GetBaseLeadersFor(faction).Where(p => p.IsValidLeaderCandidate() && p != oldLeader).ToList();
             
             if (candidates.Any())
             {
@@ -128,7 +141,8 @@ namespace SimpleLeadership
                 Find.LetterStack.ReceiveLetter(label, body, LetterDefOf.NeutralEvent, oldLeader, faction);
             }
             
-            leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerVoid, faction);
+            if (SimpleLeadershipMod.Settings.enableEvents)
+                leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerVoid, faction);
             
             faction.leader = null;
         }

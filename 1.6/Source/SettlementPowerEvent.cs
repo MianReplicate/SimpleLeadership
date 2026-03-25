@@ -24,6 +24,7 @@ namespace SimpleLeadership
 
         public override bool ShouldGiveMessage()
         {
+            if (!SimpleLeadershipMod.Settings.enableAlerts) return false;
             if (settlement == null) return false;
             if (settlement.Tile.LayerDef != null && settlement.Tile.LayerDef.isSpace) return false;
 

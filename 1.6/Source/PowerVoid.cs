@@ -52,7 +52,7 @@ namespace SimpleLeadership
             else
             {
                 List<Pawn> candidates = leaderTracker.GetBaseLeadersFor(faction)
-                    .Where(p => p != null && !p.Dead).ToList();
+                    .Where(p => p.IsValidLeaderCandidate()).ToList();
         
                 if (candidates.Any())
                 {

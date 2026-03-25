@@ -66,6 +66,7 @@ namespace SimpleLeadership
 
         public virtual bool ShouldGiveMessage()
         {
+            if (!SimpleLeadershipMod.Settings.enableAlerts) return false;
             return true;
         }
 

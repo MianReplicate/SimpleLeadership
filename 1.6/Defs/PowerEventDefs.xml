@@ -82,7 +82,7 @@
     <workerClass>SimpleLeadership.Rioting</workerClass>
     <iconPath>UI/PowerEvents/Riot</iconPath>
     <durationDays>15</durationDays>
-    <chancePerSeason>0.2</chancePerSeason>
+    <chancePerSeason>0.05</chancePerSeason>
     <startMessage>{0} has started rioting against its leaders</startMessage>
     <endMessage>The rioting at {0} has ended with a new leader</endMessage>
     <effects>

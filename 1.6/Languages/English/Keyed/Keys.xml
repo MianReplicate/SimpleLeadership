@@ -20,6 +20,7 @@
   <SL_PowerVoidEndedLetterLabel>{FACTION_name} has come out of a Power Void.</SL_PowerVoidEndedLetterLabel>
   <SL_NewLeaderElectedLetterBody>{PAWN_nameDef} has been selected as the new faction leader.</SL_NewLeaderElectedLetterBody>
   <SL_RiotingSuccess>Rioting at {0} succeeded. {PAWN_nameDef} is the new leader.</SL_RiotingSuccess>
+  <SL_RiotingFailed>Rioting at {0} has failed. The current leader remains in power.</SL_RiotingFailed>
   <SL_SupportArriving>Reinforcements are arriving to support {0}!</SL_SupportArriving>
   <SL_PrisonersDetected>High value prisoners detected in the area.</SL_PrisonersDetected>
   <SL_ReinforcementsCalledLabel>Reinforcements Called</SL_ReinforcementsCalledLabel>
@@ -29,4 +30,10 @@
   <SL_SanctionedCannotTrade>Cannot trade with this faction. They are sanctioned.</SL_SanctionedCannotTrade>
   <SL_FactionLeaderValueBonus>Faction leader</SL_FactionLeaderValueBonus>
   <SL_BaseLeaderValueBonus>Base leader</SL_BaseLeaderValueBonus>
+  <SL_General>General</SL_General>
+  <SL_EnableAlerts>Enable base status alerts</SL_EnableAlerts>
+  <SL_EnableEvents>Enable base/faction events</SL_EnableEvents>
+  <SL_DistanceWeight>Faction distance weight</SL_DistanceWeight>
+  <SL_DistanceWeightDesc>Controls how strongly a faction's proximity to your colony influences its chance of performing raids. At 0%, distance does not matter.</SL_DistanceWeightDesc>
+  <SL_LeaderSpawnChance>Leader spawn chance</SL_LeaderSpawnChance>
 </LanguageData>

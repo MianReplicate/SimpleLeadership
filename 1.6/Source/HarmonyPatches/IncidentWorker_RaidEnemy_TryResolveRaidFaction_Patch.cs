@@ -42,18 +42,26 @@ namespace SimpleLeadership
 
             if (factionSettlements.Count == 0)
                 return null;
-            if (target is Map map)
+
+            float weight = SimpleLeadershipMod.Settings.distanceWeight;
+            if (weight <= 0f)
+                return factionSettlements.RandomElement();
+
+            int targetTile = -1;
+            if (target is Map map) targetTile = map.Tile;
+            else if (target is WorldObject worldObject) targetTile = worldObject.Tile;
+
+            if (targetTile != -1)
             {
-                return factionSettlements
-                    .OrderBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, map.Tile))
-                    .FirstOrDefault();
+                return factionSettlements.RandomElementByWeight(s =>
+                {
+                    float dist = Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile);
+                    float distWeight = Mathf.InverseLerp(100f, 5f, dist);
+                    float blended = Mathf.Lerp(1f, distWeight, weight);
+                    return Mathf.Max(blended, 0.01f);
+                });
             }
-            if (target is WorldObject worldObject)
-            {
-                return factionSettlements
-                    .OrderBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, worldObject.Tile))
-                    .FirstOrDefault();
-            }
+
             return factionSettlements.FirstOrDefault();
         }
     }

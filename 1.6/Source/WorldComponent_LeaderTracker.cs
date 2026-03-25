@@ -17,6 +17,7 @@ namespace SimpleLeadership
         private List<Faction> keys = [];
         private List<FactionLeadershipData> values = [];
         private List<PowerEventDef> randomSettlementEvents;
+        public Dictionary<Faction, int> lastLeaderRaidTick = new Dictionary<Faction, int>();
         private float MaxLeaderDistance => 60f * Mathf.Sqrt(Find.WorldGrid.TilesCount / 30000f);
 
         public static WorldComponent_LeaderTracker Instance;
@@ -58,7 +59,7 @@ namespace SimpleLeadership
             float basesPerLeader = 5f;
             bool isOrbital = settlement.Tile.LayerDef.isSpace;
             var existingLeaders = data.settlementLeaders
-                .Where(kvp => kvp.Value != null && !kvp.Value.Dead)
+                .Where(kvp => kvp.Value.IsValidLeaderCandidate())
                 .Select(kvp => kvp.Value)
                 .Distinct()
                 .ToList();
@@ -116,6 +117,7 @@ namespace SimpleLeadership
 
         private void TryTriggerRandomEvents()
         {
+            if (!SimpleLeadershipMod.Settings.enableEvents) return;
             if (Find.TickManager.TicksGame % 2500 != 0) return;
             foreach (Settlement settlement in Find.WorldObjects.Settlements)
             {
@@ -142,9 +144,16 @@ namespace SimpleLeadership
             Scribe_Collections.Look(ref activeEvents, "activeEvents", LookMode.Deep);
             Scribe_Values.Look(ref initialized, "initialized", defaultValue: false);
 
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                lastLeaderRaidTick.RemoveAll(x => x.Key == null);
+            }
+            Scribe_Collections.Look(ref lastLeaderRaidTick, "lastLeaderRaidTick", LookMode.Reference, LookMode.Value);
+
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 leadershipData ??= [];
+                lastLeaderRaidTick ??= new Dictionary<Faction, int>();
                 activeEvents ??= [];
                 activeEvents.RemoveAll(ev => ev.GetTarget() == null);
                 eventsByTarget = new Dictionary<object, List<PowerEventBase>>();
