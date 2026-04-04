@@ -30,10 +30,13 @@
   <SL_SanctionedCannotTrade>Cannot trade with this faction. They are sanctioned.</SL_SanctionedCannotTrade>
   <SL_FactionLeaderValueBonus>Faction leader</SL_FactionLeaderValueBonus>
   <SL_BaseLeaderValueBonus>Base leader</SL_BaseLeaderValueBonus>
+
   <SL_General>General</SL_General>
   <SL_EnableAlerts>Enable base status alerts</SL_EnableAlerts>
+  <SL_EnableAlerts.Desc>If Disabled, you will not receive notifications of base/faction events. </SL_EnableAlerts.Desc>
   <SL_EnableEvents>Enable base/faction events</SL_EnableEvents>
+  <SL_EnableEvents.Desc>If Disabled, base/faction events will no longer generate. </SL_EnableEvents.Desc>
   <SL_DistanceWeight>Faction distance weight</SL_DistanceWeight>
-  <SL_DistanceWeightDesc>Controls how strongly a faction's proximity to your colony influences its chance of performing raids. At 0%, distance does not matter.</SL_DistanceWeightDesc>
+  <SL_DistanceWeight.Desc>Controls how strongly a faction's proximity to your colony influences its chance of performing raids. At 0%, distance does not matter.</SL_DistanceWeight.Desc>
   <SL_LeaderSpawnChance>Leader spawn chance</SL_LeaderSpawnChance>
 </LanguageData>
