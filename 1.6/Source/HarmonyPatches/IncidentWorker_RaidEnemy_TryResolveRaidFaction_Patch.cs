@@ -11,8 +11,24 @@ namespace SimpleLeadership
     [HarmonyPatch(typeof(IncidentWorker_RaidEnemy), "TryResolveRaidFaction")]
     public static class IncidentWorker_RaidEnemy_TryResolveRaidFaction_Patch
     {
+        public static int? RaidContextTargetTile;
+
+        public static void Prefix(IncidentParms parms)
+        {
+            if (SimpleLeadershipMod.Settings.distanceWeight <= 0f)
+                return;
+
+            int targetTile = -1;
+            if (parms.target is Map map) targetTile = map.Tile;
+            else if (parms.target is WorldObject worldObject) targetTile = worldObject.Tile;
+
+            RaidContextTargetTile = targetTile != -1 ? targetTile : (int?)null;
+        }
+
         public static void Postfix(IncidentParms parms)
         {
+            RaidContextTargetTile = null;
+
             if (parms.faction == null || parms.target == null)
                 return;
             Settlement originSettlement = FindMostLikelyOriginSettlement(parms.faction, parms.target);
