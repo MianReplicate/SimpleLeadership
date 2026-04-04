@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using RimWorld;
-using RimWorld.Planet;
 
 namespace SimpleLeadership
 {
@@ -53,7 +52,7 @@ namespace SimpleLeadership
             {
                 List<Pawn> candidates = leaderTracker.GetBaseLeadersFor(faction)
                     .Where(p => p.IsValidLeaderCandidate()).ToList();
-        
+
                 if (candidates.Any())
                 {
                     newLeader = candidates.RandomElement();
@@ -80,7 +79,7 @@ namespace SimpleLeadership
                     }
                 }
             }
-    
+
             base.OnResolve();
         }
 
