@@ -11,24 +11,8 @@ namespace SimpleLeadership
     [HarmonyPatch(typeof(IncidentWorker_RaidEnemy), "TryResolveRaidFaction")]
     public static class IncidentWorker_RaidEnemy_TryResolveRaidFaction_Patch
     {
-        public static int? RaidContextTargetTile;
-
-        public static void Prefix(IncidentParms parms)
-        {
-            if (SimpleLeadershipMod.Settings.distanceWeight <= 0f)
-                return;
-
-            int targetTile = -1;
-            if (parms.target is Map map) targetTile = map.Tile;
-            else if (parms.target is WorldObject worldObject) targetTile = worldObject.Tile;
-
-            RaidContextTargetTile = targetTile != -1 ? targetTile : (int?)null;
-        }
-
         public static void Postfix(IncidentParms parms)
         {
-            RaidContextTargetTile = null;
-
             if (parms.faction == null || parms.target == null)
                 return;
             Settlement originSettlement = FindMostLikelyOriginSettlement(parms.faction, parms.target);
@@ -59,25 +43,18 @@ namespace SimpleLeadership
             if (factionSettlements.Count == 0)
                 return null;
 
-            float weight = SimpleLeadershipMod.Settings.distanceWeight;
-            if (weight <= 0f)
-                return factionSettlements.RandomElement();
-
-            int targetTile = -1;
+            var targetTile = PlanetTile.Invalid;
             if (target is Map map) targetTile = map.Tile;
             else if (target is WorldObject worldObject) targetTile = worldObject.Tile;
 
-            if (targetTile != -1)
+            if (targetTile != PlanetTile.Invalid)
             {
                 return factionSettlements.RandomElementByWeight(s =>
                 {
-                    float dist = Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile);
-                    float distWeight = Mathf.InverseLerp(100f, 5f, dist);
-                    float blended = Mathf.Lerp(1f, distWeight, weight);
-                    return Mathf.Max(blended, 0.01f);
+                    var distance = Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile);
+                    return 1f / (distance + 1);
                 });
             }
-
             return factionSettlements.FirstOrDefault();
         }
     }

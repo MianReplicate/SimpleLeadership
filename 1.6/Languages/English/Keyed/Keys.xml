@@ -36,7 +36,5 @@
   <SL_EnableAlerts.Desc>If Disabled, you will not receive notifications of base/faction events. </SL_EnableAlerts.Desc>
   <SL_EnableEvents>Enable base/faction events</SL_EnableEvents>
   <SL_EnableEvents.Desc>If Disabled, base/faction events will no longer generate. </SL_EnableEvents.Desc>
-  <SL_DistanceWeight>Faction distance weight</SL_DistanceWeight>
-  <SL_DistanceWeight.Desc>Controls how strongly a faction's proximity to your colony influences its chance of performing raids. At 0%, distance does not matter.</SL_DistanceWeight.Desc>
   <SL_LeaderSpawnChance>Leader spawn chance</SL_LeaderSpawnChance>
 </LanguageData>

@@ -12,10 +12,6 @@ namespace SimpleLeadership
         [Label("SL_EnableEvents")]
         public bool enableEvents = true;
 
-        [Label("SL_DistanceWeight")]
-        [Percentage]
-        public float distanceWeight = 0f;
-
         [Label("SL_LeaderSpawnChance")]
         [Percentage]
         public float leaderSpawnChance = 0.02f;
