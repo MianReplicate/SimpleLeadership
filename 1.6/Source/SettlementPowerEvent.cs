@@ -25,10 +25,10 @@ namespace SimpleLeadership
         public override bool ShouldGiveMessage()
         {
             if (!SimpleLeadershipMod.Settings.enableAlerts) return false;
-            if (settlement == null) return false;
+            if (settlement == null || !settlement.Tile.Valid) return false;
             if (settlement.Tile.LayerDef != null && settlement.Tile.LayerDef.isSpace) return false;
 
-            var playerSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == Faction.OfPlayer);
+            var playerSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == Faction.OfPlayer && s.Tile.Valid);
             if (!playerSettlements.Any()) return false;
 
             var closestPlayerSettlement = playerSettlements.MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, settlement.Tile));

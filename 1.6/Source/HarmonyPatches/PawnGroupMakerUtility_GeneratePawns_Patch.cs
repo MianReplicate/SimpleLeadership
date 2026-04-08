@@ -20,7 +20,7 @@ namespace SimpleLeadership
                 Settlement settlement = RaidContext.CurrentOrigin;
                 if (settlement == null || settlement.Faction != parms.faction)
                 {
-                    var factionSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == parms.faction);
+                    var factionSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == parms.faction && s.Tile.Valid);
                     if (factionSettlements.Any())
                     {
                         settlement = factionSettlements.MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(parms.tile, s.Tile));

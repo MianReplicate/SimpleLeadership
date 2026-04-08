@@ -56,6 +56,9 @@ namespace SimpleLeadership
             if (data.settlementLeaders.ContainsKey(settlement))
                 return;
 
+            if (!settlement.Tile.Valid)
+                return;
+
             float basesPerLeader = 5f;
             bool isOrbital = settlement.Tile.LayerDef.isSpace;
             var existingLeaders = data.settlementLeaders
@@ -72,6 +75,7 @@ namespace SimpleLeadership
                 var leaderSettlements = data.settlementLeaders
                     .Where(kvp => kvp.Value == leader)
                     .Select(kvp => kvp.Key)
+                    .Where(s => s.Tile.Valid)
                     .ToList();
 
                 if (leaderSettlements.Count >= basesPerLeader)
@@ -188,7 +192,7 @@ namespace SimpleLeadership
                 }
 
                 var factionSettlements = Find.WorldObjects.Settlements
-                    .Where(s => s.Faction == faction)
+                    .Where(s => s.Faction == faction && s.Tile.Valid)
                     .OrderBy(s => Find.WorldGrid.GetTileCenter(s.Tile).x)
                     .ThenBy(s => Find.WorldGrid.GetTileCenter(s.Tile).z)
                     .ToList();

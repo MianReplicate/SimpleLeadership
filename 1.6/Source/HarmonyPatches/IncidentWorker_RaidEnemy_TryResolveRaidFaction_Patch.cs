@@ -37,7 +37,7 @@ namespace SimpleLeadership
                 return null;
 
             List<Settlement> factionSettlements = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == faction && s.Spawned)
+                .Where(s => s.Faction == faction && s.Spawned && s.Tile.Valid)
                 .ToList();
 
             if (factionSettlements.Count == 0)

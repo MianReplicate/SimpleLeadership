@@ -79,7 +79,7 @@ namespace SimpleLeadership
                     foreach (var leader in leaders)
                     {
                         var leaderSettlements = data.settlementLeaders
-                            .Where(kvp => kvp.Value == leader)
+                            .Where(kvp => kvp.Value == leader && kvp.Key.Tile.Valid)
                             .Select(kvp => kvp.Key)
                             .ToList();
 

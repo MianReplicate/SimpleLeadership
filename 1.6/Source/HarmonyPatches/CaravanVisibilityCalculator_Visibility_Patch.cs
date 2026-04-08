@@ -17,7 +17,7 @@ namespace SimpleLeadership
 
             foreach (Settlement settlement in Find.WorldObjects.Settlements)
             {
-                if (settlement.Faction == null || settlement.Faction.IsPlayer)
+                if (settlement.Faction == null || settlement.Faction.IsPlayer || !settlement.Tile.Valid)
                     continue;
 
                 if (settlement.IsInPowerEvent(PowerEventDefOf.SL_Vigilant))

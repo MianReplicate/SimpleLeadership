@@ -25,7 +25,7 @@ namespace SimpleLeadership
             if (!playerBases.Any()) return;
 
             Settlement nearestFactionBase = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == f && s.Spawned)
+                .Where(s => s.Faction == f && s.Spawned && s.Tile.Valid)
                 .OrderBy(s => playerBases.Min(p => Find.WorldGrid.ApproxDistanceInTiles(p.Tile, s.Tile)))
                 .FirstOrDefault();
 

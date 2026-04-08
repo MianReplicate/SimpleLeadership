@@ -17,7 +17,7 @@ namespace SimpleLeadership
                 return;
 
             Settlement nearestSettlement = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == faction && s.Tile != tile)
+                .Where(s => s.Faction == faction && s.Tile != tile && s.Tile.Valid)
                 .OrderBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, tile))
                 .FirstOrDefault();
 
@@ -58,7 +58,7 @@ namespace SimpleLeadership
                 return;
 
             Settlement nearestSettlement = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == faction && s.Tile != tile)
+                .Where(s => s.Faction == faction && s.Tile != tile && s.Tile.Valid)
                 .OrderBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, tile))
                 .FirstOrDefault();
 
