@@ -25,7 +25,15 @@ namespace SimpleLeadership
             {
                 SpawnPrisoners(__result, settlement.Faction);
             }
-            else if (__result.Parent is Site site)
+
+            var tracker = WorldComponent_LeaderTracker.Instance;
+            if (tracker.kidnappedPrisoners.TryGetValue(settlement, out var prisonerList) && prisonerList.prisoners.Any())
+            {
+                SpawnKidnappedPrisoners(__result, prisonerList.prisoners.ToList());
+                tracker.kidnappedPrisoners.Remove(settlement);
+            }
+
+            if (__result.Parent is Site site)
             {
                 var ownerComp = site.GetComponent<WorldObjectComp_SiteOwnership>();
                 if (ownerComp?.owningSettlement != null
@@ -61,7 +69,7 @@ namespace SimpleLeadership
             Messages.Message("SL_SupportArriving".Translate(settlement.Label), MessageTypeDefOf.ThreatBig);
         }
 
-        private static void SpawnPrisoners(Map map, Faction faction)
+        private static List<Building_Bed> FindPrisonerBeds(Map map, Faction faction)
         {
             var factionBeds = map.listerBuildings.allBuildingsNonColonist
                 .OfType<Building_Bed>()
@@ -69,7 +77,7 @@ namespace SimpleLeadership
                 .ToList();
 
             if (!factionBeds.Any())
-                return;
+                return new List<Building_Bed>();
 
             var bedsByRoom = factionBeds
                 .GroupBy(b => b.Position.GetRoom(map))
@@ -94,6 +102,41 @@ namespace SimpleLeadership
                 int takeCount = Math.Min(allBeds.Count, Rand.RangeInclusive(3, 5));
                 selectedBeds = allBeds.Take(takeCount).ToList();
             }
+
+            return selectedBeds;
+        }
+
+        private static void SpawnKidnappedPrisoners(Map map, List<Pawn> prisoners)
+        {
+            var faction = map.Parent.Faction;
+            var selectedBeds = FindPrisonerBeds(map, faction);
+
+            for (var i = 0; i < prisoners.Count; i++)
+            {
+                var prisoner = prisoners[i];
+                IntVec3 spawnPos;
+                if (i < selectedBeds.Count)
+                {
+                    var bed = selectedBeds[i];
+                    bed.ForPrisoners = true;
+                    spawnPos = bed.Position;
+                }
+                else
+                {
+                    spawnPos = selectedBeds[0].Position;
+                }
+                if (!prisoner.Spawned)
+                    GenSpawn.Spawn(prisoner, spawnPos, map);
+                if (prisoner.guest != null)
+                    prisoner.guest.SetGuestStatus(faction, GuestStatus.Prisoner);
+            }
+
+            Messages.Message("SL_KidnappedColonistsDetected".Translate(), MessageTypeDefOf.NeutralEvent);
+        }
+
+        private static void SpawnPrisoners(Map map, Faction faction)
+        {
+            var selectedBeds = FindPrisonerBeds(map, faction);
 
             foreach (var bed in selectedBeds)
             {

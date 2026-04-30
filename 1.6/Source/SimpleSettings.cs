@@ -304,7 +304,7 @@ public static class SimpleSettings
             inRect.y += Text.CalcHeight(description, inRect.width) + 8;
         }
 
-        if (highlightedMember.Options.AllowReset)
+        if (highlightedMember.Options.AllowReset && highlightedMember.Options.ShowDefaultValue)
         {
             string defaultValue = highlightedMember.ValueToString(highlightedMember.GetDefault<object>());
             Widgets.Label(inRect, $"<color=grey><i>Default value: </i>{defaultValue}\n\nRight-click to reset to default.</color>");
@@ -857,7 +857,7 @@ public static class SimpleSettings
         {
             var attr = TryGetCustomAttribute<DescriptionAttribute>();
             if (attr != null)
-                attr.Description.TranslateOrSelf();
+                return attr.Description.TranslateOrSelf();
 
             var attr2 = TryGetCustomAttribute<LabelAttribute>();
 
@@ -1006,14 +1006,16 @@ public class SettingOptionsAttribute : Attribute
     public readonly bool DrawValue = true;
     public readonly bool AllowReset = true;
     public readonly bool DrawHoverHighlight = true;
+    public readonly bool ShowDefaultValue = true;
 
     public SettingOptionsAttribute(bool drawDescription = true, bool drawValue = true,
-        bool allowReset = true, bool drawHoverHighlight = true)
+        bool allowReset = true, bool drawHoverHighlight = true, bool showDefaultValue = true)
     {
         DrawDescription = drawDescription;
         DrawValue = drawValue;
         AllowReset = allowReset;
         DrawHoverHighlight = drawHoverHighlight;
+        ShowDefaultValue = showDefaultValue;
     }
 
     private SettingOptionsAttribute() { }

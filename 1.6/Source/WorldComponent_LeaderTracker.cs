@@ -16,8 +16,17 @@ namespace SimpleLeadership
         internal bool initialized = false;
         private List<Faction> keys = [];
         private List<FactionLeadershipData> values = [];
+        private List<Faction> raidKeys = [];
+        private List<int> raidValues = [];
+
+        private List<Settlement> settlementKeys = [];
+        private List<KidnappedPrisonersList> kidnappedPrisonersValues = [];
+        private List<Faction> originKeys = [];
+        private List<Settlement> originSettlements = [];
         private List<PowerEventDef> randomSettlementEvents;
         public Dictionary<Faction, int> lastLeaderRaidTick = new Dictionary<Faction, int>();
+        public Dictionary<Faction, Settlement> lastRaidOrigin = [];
+        public Dictionary<Settlement, KidnappedPrisonersList> kidnappedPrisoners = [];
         private float MaxLeaderDistance => 60f * Mathf.Sqrt(Find.WorldGrid.TilesCount / 30000f);
 
         public static WorldComponent_LeaderTracker Instance;
@@ -59,7 +68,7 @@ namespace SimpleLeadership
             if (!settlement.Tile.Valid)
                 return;
 
-            float basesPerLeader = 5f;
+            int basesPerLeader = SimpleLeadershipMod.Settings.basesPerLeader;
             bool isOrbital = settlement.Tile.LayerDef.isSpace;
             var existingLeaders = data.settlementLeaders
                 .Where(kvp => kvp.Value.IsValidLeaderCandidate())
@@ -152,12 +161,16 @@ namespace SimpleLeadership
             {
                 lastLeaderRaidTick.RemoveAll(x => x.Key == null);
             }
-            Scribe_Collections.Look(ref lastLeaderRaidTick, "lastLeaderRaidTick", LookMode.Reference, LookMode.Value);
+            Scribe_Collections.Look(ref lastLeaderRaidTick, "lastLeaderRaidTick", LookMode.Reference, LookMode.Value, ref raidKeys, ref raidValues);
+            Scribe_Collections.Look(ref lastRaidOrigin, "lastRaidOrigin", LookMode.Reference, LookMode.Reference, ref originKeys, ref originSettlements);
+            Scribe_Collections.Look(ref kidnappedPrisoners, "kidnappedPrisoners", LookMode.Reference, LookMode.Deep, ref settlementKeys, ref kidnappedPrisonersValues);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 leadershipData ??= [];
                 lastLeaderRaidTick ??= new Dictionary<Faction, int>();
+                lastRaidOrigin ??= new Dictionary<Faction, Settlement>();
+                kidnappedPrisoners ??= new Dictionary<Settlement, KidnappedPrisonersList>();
                 activeEvents ??= [];
                 activeEvents.RemoveAll(ev => ev.GetTarget() == null);
                 eventsByTarget = new Dictionary<object, List<PowerEventBase>>();
@@ -209,7 +222,8 @@ namespace SimpleLeadership
 
         private bool IsValidFactionForLeaders(Faction faction)
         {
-            return faction != null && faction.def.humanlikeFaction && !faction.IsPlayer && !faction.Hidden && faction.def.pawnGroupMakers != null;
+            return faction != null && faction.def.humanlikeFaction && !faction.IsPlayer && !faction.Hidden && faction.def.pawnGroupMakers != null
+                && !SimpleLeadershipMod.Settings.factionBlacklist.Contains(faction.def.defName);
         }
 
         public Pawn GenerateBaseLeader(Faction faction)

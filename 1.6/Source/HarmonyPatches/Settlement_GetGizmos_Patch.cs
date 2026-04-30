@@ -14,6 +14,20 @@ namespace SimpleLeadership
             if (!DebugSettings.ShowDevGizmos) return;
 
             var gizmos = new List<Gizmo>(__result);
+            var tracker = WorldComponent_LeaderTracker.Instance;
+
+            gizmos.Add(new Command_Action
+            {
+                defaultLabel = "DEV: Generate New Base Leader",
+                action = () =>
+                {
+                    var data = tracker.GetLeadershipDataFor(__instance.Faction);
+                    if (data == null) return;
+                    var newLeader = tracker.GenerateBaseLeader(__instance.Faction);
+                    if (newLeader != null)
+                        data.settlementLeaders[__instance] = newLeader;
+                }
+            });
 
             foreach (var def in DefDatabase<PowerEventDef>.AllDefs)
             {

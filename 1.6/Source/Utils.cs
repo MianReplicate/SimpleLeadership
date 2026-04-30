@@ -4,6 +4,7 @@ using Verse;
 using RimWorld;
 using RimWorld.Planet;
 using System.Linq;
+using UnityEngine;
 
 namespace SimpleLeadership
 {
@@ -145,6 +146,13 @@ namespace SimpleLeadership
                 leaderTracker.StartPowerEvent(PowerEventDefOf.SL_PowerVoid, faction);
             
             faction.leader = null;
+        }
+
+        public static float CalculateDistanceWeight(float distance, float weight)
+        {
+            float distWeight = Mathf.Pow(Mathf.InverseLerp(100f, 5f, distance), 3f);
+            float blended = Mathf.Lerp(1f, distWeight, weight);
+            return Mathf.Max(blended, 0.01f);
         }
     }
 }

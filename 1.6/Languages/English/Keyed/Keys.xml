@@ -36,5 +36,13 @@
   <SL_EnableAlerts.Desc>If Disabled, you will not receive notifications of base/faction events. </SL_EnableAlerts.Desc>
   <SL_EnableEvents>Enable base/faction events</SL_EnableEvents>
   <SL_EnableEvents.Desc>If Disabled, base/faction events will no longer generate. </SL_EnableEvents.Desc>
+  <SL_DistanceWeight>Faction distance weight</SL_DistanceWeight>
+  <SL_DistanceWeight.Desc>Controls how strongly a faction's proximity to your colony influences its chance of performing raids. At 0%, distance does not matter.</SL_DistanceWeight.Desc>
   <SL_LeaderSpawnChance>Leader spawn chance</SL_LeaderSpawnChance>
+  <SL_BasesPerLeader>Bases per leader</SL_BasesPerLeader>
+  <SL_BasesPerLeader.Desc>How many bases a single leader oversees. Set to 1 for every base to have a unique leader.</SL_BasesPerLeader.Desc>
+  <SL_KidnappedTakenToBase>{FACTION_name} is taking {KIDNAPPED_nameDef} back to {BASE_label}.</SL_KidnappedTakenToBase>
+  <SL_Blacklist>Blacklist</SL_Blacklist>
+  <SL_BlacklistDesc>Factions on this list will not have base leaders generated for them.</SL_BlacklistDesc>
+  <SL_KidnappedColonistsDetected>Kidnapped colonists detected in the area</SL_KidnappedColonistsDetected>
 </LanguageData>
