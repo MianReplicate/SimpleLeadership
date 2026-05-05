@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using RimWorld;
@@ -37,7 +38,7 @@ namespace SimpleLeadership
             {
                 return;
             }
-            var originSettlement = ChosenOriginSettlement;
+            var originSettlement = ChosenOriginSettlement ?? FindMostLikelyOriginSettlement(parms.faction, parms.target);
             ChosenOriginSettlement = null;
             RaidContext.CurrentOrigin = originSettlement;
 
@@ -57,6 +58,33 @@ namespace SimpleLeadership
                     parms.points *= 2f;
                 }
             }
+        }
+
+        private static Settlement FindMostLikelyOriginSettlement(Faction faction, IIncidentTarget target)
+        {
+            if (faction == null)
+                return null;
+
+            List<Settlement> factionSettlements = Find.WorldObjects.Settlements
+                .Where(s => s.Faction == faction && s.Spawned)
+                .ToList();
+
+            if (factionSettlements.Count == 0)
+                return null;
+
+            var targetTile = PlanetTile.Invalid;
+            if (target is Map map) targetTile = map.Tile;
+            else if (target is WorldObject worldObject) targetTile = worldObject.Tile;
+
+            if (targetTile != PlanetTile.Invalid)
+            {
+                return factionSettlements.RandomElementByWeight(s =>
+                {
+                    var distance = Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile);
+                    return 1f / (distance + 1);
+                });
+            }
+            return factionSettlements.FirstOrDefault();
         }
     }
 }
