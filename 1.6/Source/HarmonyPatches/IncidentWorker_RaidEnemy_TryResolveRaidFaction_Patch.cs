@@ -2,7 +2,6 @@ using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
 using Verse;
 
 namespace SimpleLeadership
@@ -11,26 +10,35 @@ namespace SimpleLeadership
     public static class IncidentWorker_RaidEnemy_TryResolveRaidFaction_Patch
     {
         public static PlanetTile RaidContextTargetTile;
+        internal static Settlement ChosenOriginSettlement;
         public static void Prefix(IncidentParms parms)
         {
+            ChosenOriginSettlement = null;
             if (SimpleLeadershipMod.Settings.distanceWeight <= 0f)
                 return;
             var targetTile = PlanetTile.Invalid;
             if (parms.target is Map map) targetTile = map.Tile;
             else if (parms.target is WorldObject worldObject) targetTile = worldObject.Tile;
-            RaidContextTargetTile = targetTile != PlanetTile.Invalid ? targetTile : PlanetTile.Invalid;
+            if (targetTile == PlanetTile.Invalid)
+                return;
+            RaidContextTargetTile = targetTile;
+            if (Rand.Value >= SimpleLeadershipMod.Settings.distanceWeight)
+                return;
+            ChosenOriginSettlement = Find.WorldObjects.Settlements
+                .Where(s => s.Faction != null && !s.Faction.IsPlayer && s.Spawned && s.Tile.Valid)
+                .MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile));
         }
 
         public static void Postfix(IncidentParms parms)
         {
-            var previousTargetTile = RaidContextTargetTile;
             RaidContextTargetTile = PlanetTile.Invalid;
 
             if (parms.faction == null || parms.target == null)
             {
                 return;
             }
-            Settlement originSettlement = FindMostLikelyOriginSettlement(parms.faction, parms.target);
+            var originSettlement = ChosenOriginSettlement;
+            ChosenOriginSettlement = null;
             RaidContext.CurrentOrigin = originSettlement;
 
             if (originSettlement != null)
@@ -49,36 +57,6 @@ namespace SimpleLeadership
                     parms.points *= 2f;
                 }
             }
-        }
-
-        private static Settlement FindMostLikelyOriginSettlement(Faction faction, IIncidentTarget target)
-        {
-            if (faction == null)
-                return null;
-
-            var factionSettlements = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == faction && s.Spawned && s.Tile.Valid)
-                .ToList();
-
-            if (factionSettlements.Count == 0)
-                return null;
-
-            float weight = SimpleLeadershipMod.Settings.distanceWeight;
-
-            var targetTile = PlanetTile.Invalid;
-            if (target is Map map) targetTile = map.Tile;
-            else if (target is WorldObject worldObject) targetTile = worldObject.Tile;
-
-            if (targetTile == PlanetTile.Invalid || weight <= 0f)
-                return factionSettlements.RandomElement();
-
-            var sorted = factionSettlements
-                .OrderBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile))
-                .ToList();
-
-            float decay = 1f - weight;
-            var ranked = sorted.Select((s, i) => (settlement: s, w: Mathf.Pow(decay, i))).ToList();
-            return ranked.RandomElementByWeight(x => x.w).settlement;
         }
     }
 }

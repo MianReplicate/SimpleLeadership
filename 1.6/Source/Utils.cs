@@ -148,11 +148,5 @@ namespace SimpleLeadership
             faction.leader = null;
         }
 
-        public static float CalculateDistanceWeight(float distance, float weight)
-        {
-            float distWeight = Mathf.Pow(Mathf.InverseLerp(100f, 5f, distance), 3f);
-            float blended = Mathf.Lerp(1f, distWeight, weight);
-            return Mathf.Max(blended, 0.01f);
-        }
     }
 }

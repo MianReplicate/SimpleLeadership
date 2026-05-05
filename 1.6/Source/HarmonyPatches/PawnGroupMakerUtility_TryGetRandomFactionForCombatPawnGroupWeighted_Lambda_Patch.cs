@@ -2,7 +2,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
-using UnityEngine;
+using RimWorld.Planet;
 using Verse;
 
 namespace SimpleLeadership
@@ -33,26 +33,11 @@ namespace SimpleLeadership
 
         public static void Postfix(Faction f, ref float __result)
         {
-            var targetTile = IncidentWorker_RaidEnemy_TryResolveRaidFaction_Patch.RaidContextTargetTile;
-            float distanceWeight = SimpleLeadershipMod.Settings.distanceWeight;
-
-            if (targetTile == null || distanceWeight <= 0f)
+            var chosen = IncidentWorker_RaidEnemy_TryResolveRaidFaction_Patch.ChosenOriginSettlement;
+            if (chosen == null)
                 return;
-
-            var factionSettlements = Find.WorldObjects.Settlements
-                .Where(s => s.Faction == f && s.Spawned)
-                .ToList();
-
-            if (factionSettlements.Count == 0)
-            {
-                return;
-            }
-
-            float minDist = factionSettlements.Min(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile));
-            float calculatedWeight = Utils.CalculateDistanceWeight(minDist, distanceWeight);
-
-            var multiplier = Mathf.Max(calculatedWeight, 0.01f);
-            __result *= multiplier;
+            if (f != chosen.Faction)
+                __result = 0f;
         }
     }
 }
