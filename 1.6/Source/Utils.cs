@@ -33,6 +33,13 @@ namespace SimpleLeadership
             }
         }
 
+        public static float SafeApproxDistanceInTiles(PlanetTile a, PlanetTile b)
+        {
+            if (a.Layer == b.Layer)
+                return Find.WorldGrid.ApproxDistanceInTiles(a, b);
+            return int.MaxValue;
+        }
+
         public static bool IsInPowerEvent<T>(this object obj) where T : PowerEventBase
         {
             return WorldComponent_LeaderTracker.Instance.IsInPowerEvent<T>(obj);

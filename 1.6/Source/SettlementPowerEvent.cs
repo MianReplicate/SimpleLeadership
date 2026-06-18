@@ -31,8 +31,8 @@ namespace SimpleLeadership
             var playerSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == Faction.OfPlayer && s.Tile.Valid);
             if (!playerSettlements.Any()) return false;
 
-            var closestPlayerSettlement = playerSettlements.MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, settlement.Tile));
-            return Find.WorldGrid.ApproxDistanceInTiles(closestPlayerSettlement.Tile, settlement.Tile) < 30;
+            var closestPlayerSettlement = playerSettlements.MinBy(s => Utils.SafeApproxDistanceInTiles(s.Tile, settlement.Tile));
+            return Utils.SafeApproxDistanceInTiles(closestPlayerSettlement.Tile, settlement.Tile) < 30;
         }
 
         protected override string GetFormattedMessage(string message)

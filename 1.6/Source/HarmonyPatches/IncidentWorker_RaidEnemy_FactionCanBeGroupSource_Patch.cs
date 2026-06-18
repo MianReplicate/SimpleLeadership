@@ -26,12 +26,12 @@ namespace SimpleLeadership
 
             Settlement nearestFactionBase = Find.WorldObjects.Settlements
                 .Where(s => s.Faction == f && s.Spawned && s.Tile.Valid)
-                .OrderBy(s => playerBases.Min(p => Find.WorldGrid.ApproxDistanceInTiles(p.Tile, s.Tile)))
+                .OrderBy(s => playerBases.Min(p => Utils.SafeApproxDistanceInTiles(p.Tile, s.Tile)))
                 .FirstOrDefault();
 
             if (nearestFactionBase == null) return;
 
-            float nearestDistance = playerBases.Min(p => Find.WorldGrid.ApproxDistanceInTiles(p.Tile, nearestFactionBase.Tile));
+            float nearestDistance = playerBases.Min(p => Utils.SafeApproxDistanceInTiles(p.Tile, nearestFactionBase.Tile));
             if (nearestDistance > 30f)
             {
                 float suppressChance = Mathf.Clamp01((nearestDistance - 30f) / 90f) * 0.8f;

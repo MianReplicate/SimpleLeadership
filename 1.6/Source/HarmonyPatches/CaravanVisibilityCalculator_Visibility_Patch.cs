@@ -22,7 +22,7 @@ namespace SimpleLeadership
 
                 if (settlement.IsInPowerEvent(PowerEventDefOf.SL_Vigilant))
                 {
-                    float distance = Find.WorldGrid.ApproxDistanceInTiles(caravan.Tile, settlement.Tile);
+                    float distance = Utils.SafeApproxDistanceInTiles(caravan.Tile, settlement.Tile);
                     if (distance <= 10f)
                     {
                         float multiplier = 1f + (10f - distance) * 0.1f;

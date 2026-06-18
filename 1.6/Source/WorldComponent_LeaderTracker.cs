@@ -91,7 +91,7 @@ namespace SimpleLeadership
                     continue;
 
                 float nearestDistance = leaderSettlements
-                    .Min(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, settlement.Tile));
+                    .Min(s => Utils.SafeApproxDistanceInTiles(s.Tile, settlement.Tile));
 
                 if (!isOrbital && nearestDistance >= MaxLeaderDistance)
                     continue;

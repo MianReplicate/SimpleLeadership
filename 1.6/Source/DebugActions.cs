@@ -34,7 +34,7 @@ namespace SimpleLeadership
 
             if (playerTile.Valid)
             {
-                allEntries = allEntries.OrderBy(e => e.settlement != null ? Find.WorldGrid.ApproxDistanceInTiles(playerTile, e.settlement.Tile) : float.MaxValue).ToList();
+                allEntries = allEntries.OrderBy(e => e.settlement != null ? Utils.SafeApproxDistanceInTiles(playerTile, e.settlement.Tile) : float.MaxValue).ToList();
             }
 
             List<FloatMenuOption> list = [];
@@ -94,7 +94,7 @@ namespace SimpleLeadership
                             {
                                 for (int j = i + 1; j < leaderSettlements.Count; j++)
                                 {
-                                    totalDistance += Find.WorldGrid.ApproxDistanceInTiles(leaderSettlements[i].Tile, leaderSettlements[j].Tile);
+                                    totalDistance += Utils.SafeApproxDistanceInTiles(leaderSettlements[i].Tile, leaderSettlements[j].Tile);
                                     distanceCount++;
                                 }
                             }

@@ -23,7 +23,7 @@ namespace SimpleLeadership
                     var factionSettlements = Find.WorldObjects.Settlements.Where(s => s.Faction == parms.faction && s.Tile.Valid);
                     if (factionSettlements.Any())
                     {
-                        settlement = factionSettlements.MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(parms.tile, s.Tile));
+                        settlement = factionSettlements.MinBy(s => Utils.SafeApproxDistanceInTiles(parms.tile, s.Tile));
                     }
                 }
                 if (settlement == null) return;

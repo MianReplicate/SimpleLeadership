@@ -27,7 +27,7 @@ namespace SimpleLeadership
                 return;
             ChosenOriginSettlement = Find.WorldObjects.Settlements
                 .Where(s => s.Faction != null && !s.Faction.IsPlayer && s.Spawned && s.Tile.Valid)
-                .MinBy(s => Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile));
+                .MinBy(s => Utils.SafeApproxDistanceInTiles(s.Tile, targetTile));
         }
 
         public static void Postfix(IncidentParms parms)
@@ -80,7 +80,7 @@ namespace SimpleLeadership
             {
                 return factionSettlements.RandomElementByWeight(s =>
                 {
-                    var distance = Find.WorldGrid.ApproxDistanceInTiles(s.Tile, targetTile);
+                    var distance = Utils.SafeApproxDistanceInTiles(s.Tile, targetTile);
                     return 1f / (distance + 1);
                 });
             }
