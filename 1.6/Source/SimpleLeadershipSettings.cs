@@ -17,7 +17,7 @@ namespace SimpleLeadership
 
         [Label("SL_DistanceWeight")]
         [Percentage]
-        public float distanceWeight = 0f;
+        public float distanceWeight = 0.6f;
 
         [Label("SL_LeaderSpawnChance")]
         [Percentage]

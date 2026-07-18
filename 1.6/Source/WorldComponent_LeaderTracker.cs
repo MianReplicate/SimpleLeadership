@@ -238,8 +238,9 @@ namespace SimpleLeadership
                 if (newLeader != null && !Find.WorldPawns.Contains(newLeader))
                 {
                     Find.WorldPawns.PassToWorld(newLeader, PawnDiscardDecideMode.KeepForever);
+                    newLeader.guest.Recruitable = false;
                 }
-
+                
                 return newLeader;
             }
             catch (Exception ex)
