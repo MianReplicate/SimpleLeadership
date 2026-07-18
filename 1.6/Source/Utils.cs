@@ -137,6 +137,7 @@ namespace SimpleLeadership
                 var data = leaderTracker.GetLeadershipDataFor(faction);
                 if (data != null)
                 {
+                    data.exLeader = oldLeader;
                     data.actingLeader = actingLeader;
                 }
                 

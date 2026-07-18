@@ -11,7 +11,7 @@ namespace SimpleLeadership
         {
             if (req.Thing is not Pawn pawn || pawn.Faction == null) return;
 
-            if (pawn == pawn.Faction.leader)
+            if (pawn == pawn.Faction.leader || (pawn == WorldComponent_LeaderTracker.Instance.GetLeadershipDataFor(pawn.Faction)?.exLeader && pawn.Faction.leader == null))
                 val *= 2f;
             else if (WorldComponent_LeaderTracker.Instance.GetSettlementsOfBaseLeader(pawn).Any())
                 val *= 1.6f;

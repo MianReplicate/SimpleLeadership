@@ -8,11 +8,13 @@ namespace SimpleLeadership
     {
         public Dictionary<Settlement, Pawn> settlementLeaders = [];
         public Pawn actingLeader;
+        public Pawn exLeader;
 
         public void ExposeData()
         {
             Scribe_Collections.Look(ref settlementLeaders, "settlementLeaders", LookMode.Reference, LookMode.Reference);
             Scribe_References.Look(ref actingLeader, "actingLeader");
+            Scribe_References.Look(ref exLeader, "exLeader");
         }
     }
 }
