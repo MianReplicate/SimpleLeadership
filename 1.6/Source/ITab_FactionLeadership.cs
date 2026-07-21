@@ -26,7 +26,7 @@ namespace SimpleLeadership
         private static readonly Color PowerEventBoxColor = new Color(0.32f, 0.38f, 0.22f);
         private static readonly Color PowerEventTitleColor = new Color(0.9f, 0.85f, 0.2f);
 
-        public override bool IsVisible => SelObject is Settlement settlement && settlement.Faction != Faction.OfPlayer;
+        public override bool IsVisible => SelObject is Settlement settlement && (settlement.Faction.leader != null || WorldComponent_LeaderTracker.Instance.GetBaseLeader(settlement) != null) && settlement.Faction != Faction.OfPlayer;
 
         public WITab_FactionLeadership()
         {
@@ -37,30 +37,36 @@ namespace SimpleLeadership
         {
             size = new Vector2(520f, 330f);
 
-            Rect mainRect = new Rect(0f, 0f, size.x, size.y);
-            Widgets.DrawWindowBackground(mainRect);
-
             Settlement selectedSettlement = SelObject as Settlement;
             if (selectedSettlement == null)
             {
                 return;
             }
-
+            
             Faction faction = selectedSettlement.Faction;
+            Pawn factionLeader = faction.leader;
             WorldComponent_LeaderTracker leaderTracker = WorldComponent_LeaderTracker.Instance;
-
+            Pawn baseLeader = leaderTracker.GetBaseLeader(selectedSettlement);
+            
+            Rect mainRect = new Rect(0f, 0f, size.x, size.y);
+            Widgets.DrawWindowBackground(mainRect);
+            
             float columnWidth = (mainRect.width - ColumnSpacing) / 2f;
 
             Rect leftColumnRect = new Rect(mainRect.x, mainRect.y, columnWidth, mainRect.height).ContractedBy(10f);
             Rect rightColumnRect = new Rect(mainRect.x + columnWidth + ColumnSpacing, mainRect.y, columnWidth, mainRect.height).ContractedBy(10f);
 
-            Pawn factionLeader = faction.leader;
-            string factionLeaderLocation = GetLeaderLocationText(factionLeader);
-            DrawLeadershipColumn(leftColumnRect, "SL_FactionLeadership", factionLeader, factionLeaderLocation, faction, selectedSettlement, leaderTracker, true);
+            if (factionLeader != null)
+            {
+                string factionLeaderLocation = GetLeaderLocationText(factionLeader);
+                DrawLeadershipColumn(leftColumnRect, "SL_FactionLeadership", factionLeader, factionLeaderLocation, faction, selectedSettlement, leaderTracker, true);   
+            }
 
-            Pawn baseLeader = leaderTracker.GetBaseLeader(selectedSettlement);
-            string baseLeaderLocation = GetLeaderLocationText(baseLeader);
-            DrawLeadershipColumn(rightColumnRect, "SL_BaseLeadership", baseLeader, baseLeaderLocation, selectedSettlement.Faction, selectedSettlement, leaderTracker, false);
+            if (baseLeader != null)
+            {
+                string baseLeaderLocation = GetLeaderLocationText(baseLeader);
+                DrawLeadershipColumn(rightColumnRect, "SL_BaseLeadership", baseLeader, baseLeaderLocation, selectedSettlement.Faction, selectedSettlement, leaderTracker, false);   
+            }
 
             Widgets.DrawBoxSolid(new Rect(mainRect.center.x, mainRect.y, 1f, mainRect.height), Color.grey);
         }
