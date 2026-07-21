@@ -140,7 +140,6 @@ public class Dialog_SelectPawn : Window
 					{
 						var handleOldLeader = (Pawn leader) =>
 						{
-							Log.Message(leader);
 							if (leader == null)
 								return;
 							
