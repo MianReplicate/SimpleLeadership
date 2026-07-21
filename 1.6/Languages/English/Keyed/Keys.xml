@@ -11,6 +11,10 @@
   <SL_Location>Location:</SL_Location>
   <SL_NotAvailable>Not Available</SL_NotAvailable>
   <SL_CurrentEvents>Current Events</SL_CurrentEvents>
+  <SL_FactionFilter>Faction Filter: {0}</SL_FactionFilter>
+  <SL_XenotypeFilter>Xenotype Filter: {0}</SL_XenotypeFilter>
+  <SL_Select>Select</SL_Select>
+  <SL_Search>Search</SL_Search>
   <SL_None>None</SL_None>
   <SL_LeaderName>Name:</SL_LeaderName>
   <SL_SpawnChance>Spawn Chance:</SL_SpawnChance>

@@ -69,6 +69,11 @@ namespace SimpleLeadership
         {
             float curY = rect.y;
 
+            if (DebugSettings.godMode && Widgets.ButtonImage(new Rect(rect.x, rect.y, 22, 25), TexButton.Paste))
+            {
+                Find.WindowStack.Add(new Dialog_SelectPawn(settlement, !isLeft));
+            }
+
             Text.Font = GameFont.Medium;
             Text.Anchor = TextAnchor.MiddleCenter;
             Rect titleRect = new Rect(rect.x, curY, rect.width, TitleHeight);
