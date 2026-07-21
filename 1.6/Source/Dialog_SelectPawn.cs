@@ -140,15 +140,14 @@ public class Dialog_SelectPawn : Window
 					{
 						var handleOldLeader = (Pawn leader) =>
 						{
+							Log.Message(leader);
 							if (leader == null)
 								return;
 							
 							var pawnFaction = pawn.Faction;
-
 							if (pawnFaction?.leader == pawn)
 							{
 								pawnFaction?.leader = leader;
-								leader.SetFactionDirect(pawnFaction);
 							}
 							else
 							{
@@ -160,6 +159,7 @@ public class Dialog_SelectPawn : Window
 									data.settlementLeaders[selObject] = leader;
 								}
 							}
+							leader.SetFactionDirect(pawnFaction);
 						};
 						
 						if (!isBaseLeader)
@@ -168,7 +168,6 @@ public class Dialog_SelectPawn : Window
 							handleOldLeader(oldLeader);
 							
 							selObject.Faction.leader = pawn;
-							pawn.SetFactionDirect(selObject.Faction);
 						}
 						else
 						{
@@ -180,6 +179,7 @@ public class Dialog_SelectPawn : Window
 							
 							settlementLeaders?[selObject] = pawn;
 						}
+						pawn.SetFactionDirect(selObject.Faction);
 
 						SoundDefOf.Click.PlayOneShotOnCamera();
 						Close();
