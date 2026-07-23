@@ -128,7 +128,8 @@ namespace SimpleLeadership
                 if (!prisoner.Spawned)
                     GenSpawn.Spawn(prisoner, spawnPos, map);
                 if (prisoner.guest != null)
-                    prisoner.guest.SetGuestStatus(faction, GuestStatus.Prisoner);
+                    prisoner.guest.SetGuestStatus(faction, GuestStatus.Slave);
+                prisoner.mindState.WillJoinColonyIfRescued = true;
             }
 
             Messages.Message("SL_KidnappedColonistsDetected".Translate(), MessageTypeDefOf.NeutralEvent);
