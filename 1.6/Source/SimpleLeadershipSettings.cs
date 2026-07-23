@@ -51,7 +51,7 @@ namespace SimpleLeadership
         public float DrawFactionBlacklist(ModSettings _, SimpleSettings.MemberWrapper member, Rect area)
         {
             var defs = DefDatabase<FactionDef>.AllDefs
-                .Where(d => d.humanlikeFaction && !d.isPlayer && d.settlementGenerationWeight > 0f)
+                .Where(d => d.humanlikeFaction && !d.isPlayer)
                 .OrderBy(d => d.label)
                 .ToList();
 
