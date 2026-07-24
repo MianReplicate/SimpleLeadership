@@ -22,7 +22,7 @@ namespace SimpleLeadership
             prisonerList.prisoners.Add(__instance);
 
             Messages.Message(
-                "d".Translate(kidnapper.Faction.Named("FACTION"), __instance.Named
+                "SL_KidnappedTakenToBase".Translate(kidnapper.Faction.Named("FACTION"), __instance.Named
                 ("KIDNAPPED"), origin.Named("BASE")),
                 origin,
                 MessageTypeDefOf.ThreatBig);
